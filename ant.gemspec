@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/vinistock/ant"
   spec.metadata["changelog_uri"] = "https://github.com/vinistock/ant/blob/master/CHANGELOG.md"
 
-  spec.files = Dir["{exe,lib,ext,sig}/**/*",
+  spec.files = Dir["{exe,lib,ext}/**/*",
                    "MIT-LICENSE",
                    "Rakefile",
                    "README.md"]

@@ -1,8 +1,9 @@
+# typed: true
 # frozen_string_literal: true
 
 require "test_helper"
 
-class ReporterTest < MiniTest::Test
+class ReporterTest < Minitest::Test
   def test_increment_test_count
     reporter = Ant::Reporter.new
 

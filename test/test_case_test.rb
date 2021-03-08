@@ -1,8 +1,9 @@
+# typed: true
 # frozen_string_literal: true
 
 require "test_helper"
 
-class TestCaseTest < MiniTest::Test
+class TestCaseTest < Minitest::Test
   def setup
     @test = MyTest.new(Ant::Reporter.new, :test_example)
   end

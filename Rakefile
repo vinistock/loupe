@@ -15,10 +15,12 @@ RuboCop::RakeTask.new
 
 require "rake/extensiontask"
 
+desc "Compile the native extensions"
 task build: :compile
 
+desc "Run the type checker"
 task :type_check do
-  system("bundle exec steep check")
+  system("bundle exec srb tc")
   abort unless $?.success? # rubocop:disable Style/SpecialGlobalVars
 end
 
