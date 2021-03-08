@@ -1,0 +1,13 @@
+module Ant
+  class TestCase
+    def self.classes: () -> Array[class]
+    def self.run: () -> Ant::Reporter
+    def self.inherited: (untyped) -> void
+    def initialize: (Reporter, Symbol) -> TestCase
+    def run: () -> void
+    def setup: () -> void
+    def teardown: () -> void
+    def assert: (untyped, ?String) -> void
+    def assert_equal: (untyped, untyped, ?String) -> void
+  end
+end

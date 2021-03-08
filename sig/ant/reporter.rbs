@@ -1,0 +1,17 @@
+module Ant
+  class Reporter
+    attr_reader test_count: Integer
+    attr_reader assertion_count: Integer
+    attr_reader success_count: Integer
+    attr_reader failure_count: Integer
+    attr_reader failure_report: Hash[String, Hash[String, Hash[Symbol, String]]]
+
+    def initialize: (?IO) -> Hash[String, Hash[String, Hash[Symbol, String]]]
+    def increment_test_count: () -> Integer
+    def increment_assertion_count: () -> Integer
+    def increment_success_count: () -> Integer
+    def increment_failure_count: (String, String, String, String) -> Integer
+    def +: (Reporter) -> Reporter
+    def print_summary: () -> void
+  end
+end

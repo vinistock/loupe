@@ -1,0 +1,10 @@
+class Thor
+  def self.desc: (String, String, ?Hash[Symbol, String]) -> void
+end
+
+module Ant
+  class Cli < Thor
+    def test: (*String) -> void
+    def require_tests: (Array[String]) -> void
+  end
+end

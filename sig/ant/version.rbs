@@ -1,0 +1,3 @@
+module Ant
+  VERSION: String
+end

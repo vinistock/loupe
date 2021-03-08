@@ -1,0 +1,15 @@
+require:
+  - rubocop-packaging
+  - rubocop-performance
+  - rubocop-minitest
+
+AllCops:
+  NewCops: enable
+  Exclude:
+  - vendor/bundle/**/*
+Layout/LineLength:
+  Max: 120
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Metrics/MethodLength:
+  Max: 25
