@@ -1,6 +1,6 @@
 name: Ruby
 
-on: [push,pull_request]
+on: [push]
 
 jobs:
   build:
@@ -13,6 +13,6 @@ jobs:
         ruby-version: 3.0.0
     - name: Run the default task
       run: |
-        gem install bundler -v 2.2.11
+        gem install bundler
         bundle install
         bundle exec rake
