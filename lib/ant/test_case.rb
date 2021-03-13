@@ -153,8 +153,43 @@ module Ant
       assert_in_delta(expected, actual, [expected.abs, actual.abs].min * epsilon, failure_message)
     end
 
+    def assert_output(stdout = nil, stderr = nil, &block)
+      raise ArgumentError, "assert_output requires a block to capture output." unless block
+
+      out, err = capture_io(&block)
+
+      match_or_equal(stdout, out) if stdout
+      match_or_equal(stderr, err) if stderr
+    end
+
+    def assert_silent(&block)
+      assert_output("", "", &block)
+    end
+
+    private
+
+    def match_or_equal(matcher, output)
+      matcher.is_a?(Regexp) ? assert_match(matcher, output) : assert_equal(matcher, output)
+    end
+
+    def capture_io
+      new_stdout = StringIO.new
+      new_stderr = StringIO.new
+      stdout = $stdout
+      stderr = $stderr
+      $stdout = new_stdout
+      $stderr = new_stderr
+
+      yield
+
+      [new_stdout.string, new_stderr.string]
+    ensure
+      $stdout = stdout
+      $stderr = stderr
+    end
+
     # Missing assertions (+ refutes)
-    # :assert_operator, :assert_output :assert_raises, :assert_send, :assert_silent,
+    # :assert_operator, :assert_raises, :assert_send
     # :assert_throws, :assert_mock
   end
 end

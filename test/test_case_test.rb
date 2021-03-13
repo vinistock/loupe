@@ -73,6 +73,32 @@ class TestCaseTest < Minitest::Test
     @test.assert_match(matcher, "something 1")
   end
 
+  def test_assert_output_success
+    Ant::TestCase.any_instance.expects(:assert_equal).with("blah", "blah")
+    Ant::TestCase.any_instance.expects(:assert_equal).with("blorp", "blorp")
+
+    @test.assert_output("blah", "blorp") do
+      $stdout.print "blah"
+      $stderr.print "blorp"
+    end
+  end
+
+  def test_assert_output_regex_success
+    Ant::TestCase.any_instance.expects(:assert_match).with(/blah\s/, "Blah, blah blah")
+    Ant::TestCase.any_instance.expects(:assert_match).with(/, blo/, "Blorp, blorp blorp")
+
+    @test.assert_output(/blah\s/, /, blo/) do
+      $stdout.print "Blah, blah blah"
+      $stderr.print "Blorp, blorp blorp"
+    end
+  end
+
+  def test_assert_silent
+    Ant::TestCase.any_instance.expects(:assert_output).with("", "")
+
+    @test.assert_silent { nil }
+  end
+
   assert_assertion(:assert_equal, [2, 2], [2, 3], /Expected .* to be equal to .*\./)
   assert_assertion(:assert_empty, [[]], [[2]], /Expected .* to be empty\./)
   assert_assertion(:assert_respond_to, ["string", :upcase], [nil, :upcase], /Expected .* to respond to .*\./)

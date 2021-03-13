@@ -78,5 +78,17 @@ module Ant
       ).void
     end
     def assert_in_epsilon(expected, actual, epsilon = 0.001, failure_message = nil); end
+
+    sig do
+      params(
+        stdout: T.nilable(T.any(Regexp, String)),
+        stderr: T.nilable(T.any(Regexp, String)),
+        block: T.proc.bind(T.untyped).returns(T.untyped)
+      ).void
+    end
+    def assert_output(stdout = nil, stderr = nil, &block); end
+
+    sig { params(block: T.proc.bind(T.untyped).returns(T.untyped)).void }
+    def assert_silent(&block); end
   end
 end
