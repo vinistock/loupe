@@ -1,7 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-require_relative "ant/ant"
 require "ant/version"
 require "ant/test_case"
 require "ant/reporter"

@@ -41,6 +41,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_addition_operator
+    $stdout.expects(:print).with("\033[1;32m.\033[0m")
     reporter = Ant::Reporter.new
     second_reporter = Ant::Reporter.new
 

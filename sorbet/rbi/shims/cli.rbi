@@ -7,7 +7,7 @@ module Ant
 
     private
 
-    sig { params(files: T::Array[T::Array[String]]).void }
+    sig { params(files: T::Array[T::Array[String]]).returns(T.any(T.nilable(T::Hash[String, T::Array[Integer]]), T::Array[String])) }
     def require_tests(files); end
   end
 end

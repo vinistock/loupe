@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 # frozen_string_literal: true
 
 require "thor"
@@ -13,11 +13,10 @@ module Ant
     desc "test [paths]", "run tests"
     def test(*files)
       require_tests(files)
-      classes_per_group = (Ant::TestCase.classes.length.to_f / Etc.nprocessors).ceil
 
       ractors = Ant::TestCase.classes.each_slice(classes_per_group).map do |class_group|
         Ractor.new(class_group) do |tests|
-          tests.map(&:run)
+          tests.map { |test, line_numbers| test.run(line_numbers) }
         end
       end
 
@@ -26,11 +25,19 @@ module Ant
 
     private
 
+    def classes_per_group
+      (Ant::TestCase.classes.length.to_f / Etc.nprocessors).ceil
+    end
+
     def require_tests(files)
       if files.empty?
         Dir["#{Dir.pwd}/test/**/*_test.rb"].each { |f| require f }
       else
-        files.each { |f| require File.expand_path(f) }
+        files.each do |f|
+          file, line_number = f.split(":")
+          require File.expand_path(file)
+          Ant::TestCase.add_line_number(line_number) if line_number
+        end
       end
     end
   end

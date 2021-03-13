@@ -18,15 +18,13 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/vinistock/ant"
   spec.metadata["changelog_uri"] = "https://github.com/vinistock/ant/blob/master/CHANGELOG.md"
 
-  spec.files = Dir["{exe,lib,ext}/**/*",
+  spec.files = Dir["{exe,lib}/**/*",
                    "MIT-LICENSE",
                    "Rakefile",
                    "README.md"]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.extensions    = ["ext/ant/extconf.rb"]
 
-  # Uncomment to register a new dependency of your gem
   spec.add_dependency "thor", "~> 1.1"
 end
