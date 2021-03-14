@@ -8,6 +8,9 @@ module Ant
     sig { params(test_class: T.untyped).void }
     def self.inherited(test_class); end
 
+    sig { params(number: String).void }
+    def self.add_line_number(number); end
+
     sig { params(line_numbers: T::Array[String]).returns(Reporter) }
     def self.run(line_numbers = []); end
 
@@ -83,12 +86,12 @@ module Ant
       params(
         stdout: T.nilable(T.any(Regexp, String)),
         stderr: T.nilable(T.any(Regexp, String)),
-        block: T.proc.bind(T.untyped).returns(T.untyped)
+        block: T.nilable(T.proc.bind(T.untyped).returns(T.untyped))
       ).void
     end
     def assert_output(stdout = nil, stderr = nil, &block); end
 
-    sig { params(block: T.proc.bind(T.untyped).returns(T.untyped)).void }
+    sig { params(block: T.nilable(T.proc.bind(T.untyped).returns(T.untyped))).void }
     def assert_silent(&block); end
   end
 end

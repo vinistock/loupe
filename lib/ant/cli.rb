@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require "thor"
@@ -10,8 +10,11 @@ module Ant
   # The Cli class defines all available
   # commands and their options
   class Cli < Thor
-    desc "test [paths]", "run tests"
-    def test(*files)
+    default_command "test"
+
+    desc "test", "run tests"
+    argument("files", required: false, desc: "The list of test files to run", type: :array)
+    def test
       require_tests(files)
 
       ractors = Ant::TestCase.classes.each_slice(classes_per_group).map do |class_group|
@@ -23,14 +26,25 @@ module Ant
       ractors.flat_map(&:take).reduce(:+).print_summary # rubocop:disable Performance/Sum
     end
 
+    # If invoked through the default_command with a
+    # list of tests, Thor will not find the command.
+    # Redirect it back to the test command. E.g.:
+    # bundle exec ant test/my_test.rb
+    def self.handle_no_command_error(_name)
+      ARGV.unshift("test")
+      start(ARGV)
+    end
+
     private
 
+    # Number of classes per Ractor group
     def classes_per_group
       (Ant::TestCase.classes.length.to_f / Etc.nprocessors).ceil
     end
 
+    # Require the test files. If none selected, run entire suite
     def require_tests(files)
-      if files.empty?
+      if files.nil?
         Dir["#{Dir.pwd}/test/**/*_test.rb"].each { |f| require f }
       else
         files.each do |f|

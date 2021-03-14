@@ -25,7 +25,7 @@ module Ant
 
     def self.run(line_numbers = [])
       reporter = Reporter.new
-      test_methods = instance_methods.grep(/^test_.*/)
+      test_methods = instance_methods(false).grep(/^test_.*/)
 
       unless line_numbers.empty?
         test_methods.select! do |method_name|
