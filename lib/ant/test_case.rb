@@ -23,8 +23,7 @@ module Ant
       super
     end
 
-    def self.run(line_numbers = [])
-      reporter = Reporter.new
+    def self.run(line_numbers = [], reporter = Reporter.new)
       test_methods = instance_methods(false).grep(/^test_.*/)
 
       unless line_numbers.empty?

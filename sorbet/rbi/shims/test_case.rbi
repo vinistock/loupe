@@ -11,8 +11,8 @@ module Ant
     sig { params(number: String).void }
     def self.add_line_number(number); end
 
-    sig { params(line_numbers: T::Array[String]).returns(Reporter) }
-    def self.run(line_numbers = []); end
+    sig { params(line_numbers: T::Array[String], reporter: Reporter).returns(Reporter) }
+    def self.run(line_numbers = [], reporter = Reporter.new); end
 
     sig { params(reporter: Reporter, method_name: Symbol).returns(T.self_type) }
     def initialize(reporter, method_name); end

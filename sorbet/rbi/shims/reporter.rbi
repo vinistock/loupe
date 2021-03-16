@@ -2,7 +2,7 @@
 
 module Ant
   class Reporter
-    sig { params(io: IO).void }
+    sig { params(io: T.any(IO, StringIO)).void }
     def initialize(io = $stdout); end
 
     sig { void }
