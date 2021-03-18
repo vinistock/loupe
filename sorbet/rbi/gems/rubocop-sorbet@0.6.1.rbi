@@ -72,17 +72,20 @@ RuboCop::Cop::Sorbet::EnforceSigilOrder::MAGIC_REGEX = T.let(T.unsafe(nil), Rege
 RuboCop::Cop::Sorbet::EnforceSigilOrder::PREFERRED_ORDER = T.let(T.unsafe(nil), Hash)
 
 class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Sorbet::SignatureCop
+  def initialize(config = T.unsafe(nil), options = T.unsafe(nil)); end
+
   def accessor?(param0 = T.unsafe(nil)); end
   def autocorrect(node); end
+  def on_block(node); end
   def on_def(node); end
   def on_defs(node); end
   def on_send(node); end
+  def scope(node); end
 
   private
 
   def check_node(node); end
   def param_type_placeholder; end
-  def previous_node(node); end
   def return_type_placeholder; end
 end
 
@@ -104,6 +107,19 @@ end
 class RuboCop::Cop::Sorbet::FalseSigil < ::RuboCop::Cop::Sorbet::HasSigil
   def minimum_strictness; end
 end
+
+class RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims < ::RuboCop::Cop::Cop
+  include(::RuboCop::Cop::RangeHelp)
+
+  def autocorrect(node); end
+  def extend_t_helpers?(param0 = T.unsafe(nil)); end
+  def extend_t_sig?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims::MSG = T.let(T.unsafe(nil), String)
+
+RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 class RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral < ::RuboCop::Cop::Cop
   def initialize(*_arg0); end
@@ -150,6 +166,22 @@ class RuboCop::Cop::Sorbet::KeywordArgumentOrdering < ::RuboCop::Cop::Sorbet::Si
   def check_order_for_kwoptargs(parameters); end
 end
 
+class RuboCop::Cop::Sorbet::OneAncestorPerLine < ::RuboCop::Cop::Cop
+  def abstract?(param0); end
+  def autocorrect(node); end
+  def more_than_one_ancestor(param0 = T.unsafe(nil)); end
+  def on_class(node); end
+  def on_module(node); end
+  def requires_ancestors(param0); end
+
+  private
+
+  def new_ra_line(indent_count); end
+  def process_node(node); end
+end
+
+RuboCop::Cop::Sorbet::OneAncestorPerLine::MSG = T.let(T.unsafe(nil), String)
+
 class RuboCop::Cop::Sorbet::ParametersOrderingInSignature < ::RuboCop::Cop::Sorbet::SignatureCop
   def on_signature(node); end
   def signature_params(param0); end
@@ -169,7 +201,7 @@ class RuboCop::Cop::Sorbet::SignatureBuildOrder < ::RuboCop::Cop::Sorbet::Signat
 
   def call_chain(sig_child_node); end
   def can_autocorrect?; end
-  def node_with_index_sends(node); end
+  def node_reparsed_with_modern_features(node); end
 end
 
 RuboCop::Cop::Sorbet::SignatureBuildOrder::ORDER = T.let(T.unsafe(nil), Hash)
@@ -179,6 +211,19 @@ class RuboCop::Cop::Sorbet::SignatureCop < ::RuboCop::Cop::Cop
   def on_signature(_); end
   def signature?(param0 = T.unsafe(nil)); end
 end
+
+class RuboCop::Cop::Sorbet::SingleLineRbiClassModuleDefinitions < ::RuboCop::Cop::Cop
+  def autocorrect(node); end
+  def on_class(node); end
+  def on_module(node); end
+
+  protected
+
+  def convert_newlines(source); end
+  def process_node(node); end
+end
+
+RuboCop::Cop::Sorbet::SingleLineRbiClassModuleDefinitions::MSG = T.let(T.unsafe(nil), String)
 
 class RuboCop::Cop::Sorbet::StrictSigil < ::RuboCop::Cop::Sorbet::HasSigil
   def minimum_strictness; end
