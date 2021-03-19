@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
@@ -7,6 +7,7 @@ require "minitest/autorun"
 require "purdytest"
 require "mocha/minitest"
 require "byebug"
+require "sorbet-runtime"
 
 class MyTest < Ant::TestCase
   def test_example
@@ -15,7 +16,7 @@ class MyTest < Ant::TestCase
 end
 
 def assert_assertion(name, success_args, failure_args, message)
-  define_method("test_#{name}_success") do
+  T.unsafe(self).define_method("test_#{name}_success") do
     Ant::TestCase.any_instance.expects(:assert).with do |equal, msg|
       equal && message.match?(msg)
     end
@@ -23,7 +24,7 @@ def assert_assertion(name, success_args, failure_args, message)
     @test.send(name, *success_args)
   end
 
-  define_method("test_#{name}_failure") do
+  T.unsafe(self).define_method("test_#{name}_failure") do
     Ant::TestCase.any_instance.expects(:assert).with do |equal, msg|
       !equal && message.match?(msg)
     end
@@ -33,7 +34,7 @@ def assert_assertion(name, success_args, failure_args, message)
 end
 
 def assert_refute(name, success_args, failure_args, message)
-  define_method("test_#{name}_success") do
+  T.unsafe(self).define_method("test_#{name}_success") do
     Ant::TestCase.any_instance.expects(:refute).with do |equal, msg|
       !equal && message.match?(msg)
     end
@@ -41,7 +42,7 @@ def assert_refute(name, success_args, failure_args, message)
     @test.send(name, *success_args)
   end
 
-  define_method("test_#{name}_failure") do
+  T.unsafe(self).define_method("test_#{name}_failure") do
     Ant::TestCase.any_instance.expects(:refute).with do |equal, msg|
       equal && message.match?(msg)
     end
