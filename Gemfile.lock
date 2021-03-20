@@ -59,13 +59,13 @@ GEM
     rubocop-sorbet (0.6.1)
       rubocop
     ruby-progressbar (1.11.0)
-    sorbet (0.5.6349)
-      sorbet-static (= 0.5.6349)
-    sorbet-runtime (0.5.6349)
-    sorbet-static (0.5.6349-universal-darwin-20)
-    spoom (1.0.9)
+    sorbet (0.5.6351)
+      sorbet-static (= 0.5.6351)
+    sorbet-runtime (0.5.6351)
+    sorbet-static (0.5.6351-universal-darwin-20)
+    spoom (1.1.0)
       colorize
-      sorbet (~> 0.5.5)
+      sorbet (>= 0.5.6347)
       sorbet-runtime
       thor (>= 0.19.2)
     tapioca (0.4.17)

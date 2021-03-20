@@ -298,8 +298,26 @@ module Ant
       $stderr = stderr
     end
 
+    def assert_operator(first_object, operator, second_object, failure_message = nil)
+      return assert_predicate(first_object, operator, failure_message) unless second_object
+
+      failure_message ||= "Expected \033[1;31m#{first_object}\033[0m to be #{operator}" \
+        " \033[1;31m#{second_object}\033[0m."
+
+      assert(first_object.public_send(operator, second_object), failure_message)
+    end
+
+    def refute_operator(first_object, operator, second_object, failure_message = nil)
+      return refute_predicate(first_object, operator, failure_message) unless second_object
+
+      failure_message ||= "Expected \033[1;31m#{first_object}\033[0m to not be #{operator}" \
+        " \033[1;31m#{second_object}\033[0m."
+
+      refute(first_object.public_send(operator, second_object), failure_message)
+    end
+
     # Missing assertions (+ refutes)
-    # :assert_operator, :assert_raises, :assert_send
+    # :assert_raises, :assert_send
     # :assert_throws, :assert_mock
   end
 end

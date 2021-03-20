@@ -167,6 +167,7 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   assert_assertion(:assert_path_exists, ["lib/ant.rb"], ["fake/path/file.rb"], /Expected path .* to exist\./)
   assert_assertion(:assert_in_delta, [5.0, 5.0001], [5.0, 4.8], /Expected |.* - .*| .* \(.*\) .* to be <= .*\./)
   assert_assertion(:assert_in_epsilon, [5.0, 5.0001], [5.0, 4.8], /Expected |.* - .*| .* \(.*\) .* to be <= .*\./)
+  assert_assertion(:assert_operator, [6.0, :>=, 5.0], [5.0, :>=, 6.0], /Expected .* to be >= .*\./)
 
   assert_refute(:refute_equal, [2, 3], [2, 2], /Expected .* to not be equal to .*\./)
   assert_refute(:refute_empty, [[2]], [[]], /Expected .* to not be empty\./)
@@ -180,4 +181,5 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   assert_refute(:refute_path_exists, ["fake/path/file.rb"], ["lib/ant.rb"], /Expected path .* to not exist\./)
   assert_refute(:refute_in_delta, [5.0, 4.8], [5.0, 5.0001], /Expected |.* - .*| .* \(.*\) .* to not be <= .*\./)
   assert_refute(:refute_in_epsilon, [5.0, 4.8], [5.0, 5.0001], /Expected |.* - .*| .* \(.*\) .* to not be <= .*\./)
+  assert_refute(:refute_operator, [5.0, :>=, 6.0], [6.0, :>=, 5.0], /Expected .* to not be >= .*\./)
 end

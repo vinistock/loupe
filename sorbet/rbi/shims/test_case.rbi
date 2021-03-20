@@ -161,5 +161,25 @@ module Ant
 
     sig { params(block: T.nilable(T.proc.bind(T.untyped).returns(T.untyped))).void }
     def refute_silent(&block); end
+
+    sig do
+      params(
+        first_object: T.untyped,
+        operator: Symbol,
+        second_object: T.nilable(T.untyped),
+        failure_message: T.nilable(String)
+      ).void
+    end
+    def assert_operator(first_object, operator, second_object, failure_message = nil); end
+
+    sig do
+      params(
+        first_object: T.untyped,
+        operator: Symbol,
+        second_object: T.nilable(T.untyped),
+        failure_message: T.nilable(String)
+      ).void
+    end
+    def refute_operator(first_object, operator, second_object, failure_message = nil); end
   end
 end
