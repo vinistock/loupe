@@ -59,4 +59,14 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.assertion_count
     assert_equal 1, reporter.success_count
   end
+
+  sig { void }
+  def test_exit_status
+    $stdout.expects(:print).with("\033[1;31mF\033[0m")
+    reporter = Ant::Reporter.new
+
+    assert_equal 0, reporter.exit_status
+    reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.")
+    assert_equal 1, reporter.exit_status
+  end
 end

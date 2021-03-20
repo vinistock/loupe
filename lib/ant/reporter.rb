@@ -65,5 +65,9 @@ module Ant
         Passed: #{@success_count} Failures: #{@failure_count}#{report}
       SUMMARY
     end
+
+    def exit_status
+      @failure_count.zero? ? 0 : 1
+    end
   end
 end

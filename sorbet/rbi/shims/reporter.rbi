@@ -22,5 +22,8 @@ module Ant
 
     sig { void }
     def print_summary; end
+
+    sig { returns(Integer) }
+    def exit_status; end
   end
 end

@@ -23,7 +23,9 @@ module Ant
         end
       end
 
-      ractors.flat_map(&:take).reduce(:+).print_summary # rubocop:disable Performance/Sum
+      reporter = ractors.flat_map(&:take).reduce(:+) # rubocop:disable Performance/Sum
+      reporter.print_summary
+      exit(reporter.exit_status)
     end
 
     # If invoked through the default_command with a
