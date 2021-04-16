@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require "thor"
@@ -17,7 +16,7 @@ module Ant
     def test
       require_tests(files)
 
-      ractors = Ant::TestCase.classes.each_slice(classes_per_group).map do |class_group|
+      ractors = Ant::TestCase.classes.each_slice(classes_per_group).flat_map do |class_group|
         Ractor.new(class_group) do |tests|
           tests.map { |test, line_numbers| test.run(line_numbers) }
         end

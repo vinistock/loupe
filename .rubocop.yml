@@ -2,7 +2,6 @@ require:
   - rubocop-packaging
   - rubocop-performance
   - rubocop-minitest
-  - rubocop-sorbet
   - rubocop-rake
 
 AllCops:

@@ -1,12 +1,8 @@
-# typed: strict
 # frozen_string_literal: true
 
 require "test_helper"
 
 class ReporterTest < Minitest::Test
-  extend T::Sig
-
-  sig { void }
   def test_increment_test_count
     reporter = Ant::Reporter.new
 
@@ -14,7 +10,6 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.increment_test_count
   end
 
-  sig { void }
   def test_increment_assertion_count
     reporter = Ant::Reporter.new
 
@@ -22,7 +17,6 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.increment_assertion_count
   end
 
-  sig { void }
   def test_increment_success_count
     $stdout.expects(:print).with("\033[1;32m.\033[0m")
     reporter = Ant::Reporter.new
@@ -31,7 +25,6 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.increment_success_count
   end
 
-  sig { void }
   def test_increment_failure_count
     $stdout.expects(:print).with("\033[1;31mF\033[0m")
     reporter = Ant::Reporter.new
@@ -46,7 +39,6 @@ class ReporterTest < Minitest::Test
     assert_equal failure_report, reporter.instance_variable_get(:@failure_report)
   end
 
-  sig { void }
   def test_addition_operator
     $stdout.expects(:print).with("\033[1;32m.\033[0m")
     reporter = Ant::Reporter.new
@@ -60,7 +52,6 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.success_count
   end
 
-  sig { void }
   def test_exit_status
     $stdout.expects(:print).with("\033[1;31mF\033[0m")
     reporter = Ant::Reporter.new

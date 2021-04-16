@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 module Ant
@@ -32,6 +31,7 @@ module Ant
         end
       end
 
+      test_methods.shuffle!
       test_methods.each do |method_name|
         new(reporter, method_name).run
       rescue AssertionFailed
