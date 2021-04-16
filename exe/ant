@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+$LOAD_PATH.unshift(File.expand_path("#{Dir.pwd}/test/", __dir__))
 
 require "ant"
 
-$LOAD_PATH.unshift(File.expand_path("#{Dir.pwd}/test/", __dir__))
 Ant::Cli.start(ARGV)
