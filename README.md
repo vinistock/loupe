@@ -46,12 +46,12 @@ class MyTest < Guava::Test
 end
 ```
 
-To run the test suite, invoke the executable (optionally passing a list of test files).
+To run the test suite, invoke the executable (optionally passing a list of test files). The `test` command is the default, but explicitly passing it also works.
 
 ```shell
 $ bundle exec guava
 $ bundle exec guava test/post_test.rb
-$ bundle exec guava test/post_test.rb test/author_test.rb
+$ bundle exec guava test test/post_test.rb test/author_test.rb
 ```
 
 ## Contributing

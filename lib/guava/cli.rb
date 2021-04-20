@@ -30,7 +30,7 @@ module Guava
     # If invoked through the default_command with a
     # list of tests, Thor will not find the command.
     # Redirect it back to the test command. E.g.:
-    # bundle exec ant test/my_test.rb
+    # bundle exec guava test/my_test.rb
     def self.handle_no_command_error(_name)
       ARGV.unshift("test")
       start(ARGV)
