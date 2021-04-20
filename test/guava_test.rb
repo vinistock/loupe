@@ -2,5 +2,5 @@
 
 require "test_helper"
 
-class AntTest < Minitest::Test
+class GuavaTest < Minitest::Test
 end

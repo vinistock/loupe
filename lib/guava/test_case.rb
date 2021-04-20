@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Ant
+module Guava
   # TestCase
   #
   # The parent class for tests. Tests should

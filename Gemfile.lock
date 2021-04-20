@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ant (0.1.0)
+    guava (0.1.0)
       thor (~> 1.1)
 
 GEM
@@ -79,8 +79,8 @@ PLATFORMS
   arm64-darwin-20
 
 DEPENDENCIES
-  ant!
   byebug
+  guava!
   minitest
   mocha
   purdytest

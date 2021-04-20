@@ -4,14 +4,14 @@ require "test_helper"
 
 class ReporterTest < Minitest::Test
   def test_increment_test_count
-    reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@test_count)
     assert_equal 1, reporter.increment_test_count
   end
 
   def test_increment_assertion_count
-    reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@assertion_count)
     assert_equal 1, reporter.increment_assertion_count
@@ -19,7 +19,7 @@ class ReporterTest < Minitest::Test
 
   def test_increment_success_count
     $stdout.expects(:print).with("\033[1;32m.\033[0m")
-    reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@success_count)
     assert_equal 1, reporter.increment_success_count
@@ -27,7 +27,7 @@ class ReporterTest < Minitest::Test
 
   def test_increment_failure_count
     $stdout.expects(:print).with("\033[1;31mF\033[0m")
-    reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
     failure_report = {
       "test/my_test.rb" => {
         "my_test" => { message: "Expected false to be truthy.", line_number: 32 }
@@ -41,8 +41,8 @@ class ReporterTest < Minitest::Test
 
   def test_addition_operator
     $stdout.expects(:print).with("\033[1;32m.\033[0m")
-    reporter = Ant::Reporter.new
-    second_reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
+    second_reporter = Guava::Reporter.new
 
     reporter.increment_success_count
     second_reporter.increment_assertion_count
@@ -54,7 +54,7 @@ class ReporterTest < Minitest::Test
 
   def test_exit_status
     $stdout.expects(:print).with("\033[1;31mF\033[0m")
-    reporter = Ant::Reporter.new
+    reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.exit_status
     reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.")

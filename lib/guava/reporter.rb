@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Ant
+module Guava
   # Reporter
   #
   # Class that handles reporting test results
