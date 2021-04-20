@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Vinicius Stock"]
   spec.email         = ["stock@hey.com"]
 
-  spec.summary       = "Some summary"
-  spec.description   = "Some description"
+  spec.summary       = "An experimental test framework based on Ractors"
+  spec.description   = "An experimental test framework based on Ractors"
   spec.homepage      = "https://github.com/vinistock/guava"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
