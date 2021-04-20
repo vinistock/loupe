@@ -7,7 +7,7 @@ require "purdytest"
 require "mocha/minitest"
 require "byebug"
 
-class MyTest < Guava::TestCase
+class MyTest < Guava::Test
   def test_example
     assert true
   end
@@ -15,7 +15,7 @@ end
 
 def assert_assertion(name, success_args, failure_args, message)
   define_method("test_#{name}_success") do
-    Guava::TestCase.any_instance.expects(:assert).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
       equal && message.match?(msg)
     end
 
@@ -23,7 +23,7 @@ def assert_assertion(name, success_args, failure_args, message)
   end
 
   define_method("test_#{name}_failure") do
-    Guava::TestCase.any_instance.expects(:assert).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
       !equal && message.match?(msg)
     end
 
@@ -33,7 +33,7 @@ end
 
 def assert_refute(name, success_args, failure_args, message)
   define_method("test_#{name}_success") do
-    Guava::TestCase.any_instance.expects(:refute).with do |equal, msg|
+    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
       !equal && message.match?(msg)
     end
 
@@ -41,7 +41,7 @@ def assert_refute(name, success_args, failure_args, message)
   end
 
   define_method("test_#{name}_failure") do
-    Guava::TestCase.any_instance.expects(:refute).with do |equal, msg|
+    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
       equal && message.match?(msg)
     end
 

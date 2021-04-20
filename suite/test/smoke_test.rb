@@ -2,7 +2,7 @@
 
 require_relative "test_helper"
 
-class SmokeTest < Guava::TestCase # :nodoc:
+class SmokeTest < Guava::Test # :nodoc:
   def test_smoke_on_the_water
     assert_equal 123, Smoke.new.on_the_water
   end

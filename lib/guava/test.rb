@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Guava
-  # TestCase
+  # Test
   #
   # The parent class for tests. Tests should
   # inherit from this class in order to be run.
-  class TestCase # rubocop:disable Metrics/ClassLength
+  class Test # rubocop:disable Metrics/ClassLength
     class AssertionFailed < StandardError; end
 
     def self.classes

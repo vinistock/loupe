@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
+class TestTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   def setup
     @test = MyTest.new(Guava::Reporter.new, :test_example)
   end
 
   def test_inheriting_tests
-    assert_includes(Guava::TestCase.classes, MyTest)
+    assert_includes(Guava::Test.classes, MyTest)
   end
 
   def test_class_run
@@ -37,15 +37,15 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
     Guava::Reporter.any_instance.expects(:increment_assertion_count)
     Guava::Reporter.any_instance.expects(:increment_failure_count)
 
-    assert_raises(Guava::TestCase::AssertionFailed) do
+    assert_raises(Guava::Test::AssertionFailed) do
       @test.assert(false)
     end
   end
 
   def test_assert_match_success
     matcher = /something \d/
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:assert).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
       equal && /Expected .* to match .*\./.match?(msg)
     end
 
@@ -54,8 +54,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_assert_match_failure
     matcher = /something \d/
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:assert).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
       !equal && /Expected .* to match .*\./.match?(msg)
     end
 
@@ -64,8 +64,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_assert_match_string
     matcher = "thing 1"
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:assert).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
       equal && /Expected .* to match .*\./.match?(msg)
     end
 
@@ -74,8 +74,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_refute_match_success
     matcher = /something \d/
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:refute).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
       !equal && /Expected .* to not match .*\./.match?(msg)
     end
 
@@ -84,8 +84,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_refute_match_failure
     matcher = /something \d/
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:refute).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
       equal && /Expected .* to not match .*\./.match?(msg)
     end
 
@@ -94,8 +94,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_refute_match_string
     matcher = "thing 1"
-    Guava::TestCase.any_instance.expects(:assert_respond_to).with(matcher, :=~)
-    Guava::TestCase.any_instance.expects(:refute).with do |equal, msg|
+    Guava::Test.any_instance.expects(:assert_respond_to).with(matcher, :=~)
+    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
       !equal && /Expected .* to not match .*\./.match?(msg)
     end
 
@@ -103,8 +103,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_assert_output_success
-    Guava::TestCase.any_instance.expects(:assert_equal).with("blah", "blah")
-    Guava::TestCase.any_instance.expects(:assert_equal).with("blorp", "blorp")
+    Guava::Test.any_instance.expects(:assert_equal).with("blah", "blah")
+    Guava::Test.any_instance.expects(:assert_equal).with("blorp", "blorp")
 
     @test.assert_output("blah", "blorp") do
       $stdout.print "blah"
@@ -113,8 +113,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_assert_output_regex_success
-    Guava::TestCase.any_instance.expects(:assert_match).with(/blah\s/, "Blah, blah blah")
-    Guava::TestCase.any_instance.expects(:assert_match).with(/, blo/, "Blorp, blorp blorp")
+    Guava::Test.any_instance.expects(:assert_match).with(/blah\s/, "Blah, blah blah")
+    Guava::Test.any_instance.expects(:assert_match).with(/, blo/, "Blorp, blorp blorp")
 
     @test.assert_output(/blah\s/, /, blo/) do
       $stdout.print "Blah, blah blah"
@@ -123,8 +123,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_refute_output_success
-    Guava::TestCase.any_instance.expects(:refute_equal).with("blah", "blorp")
-    Guava::TestCase.any_instance.expects(:refute_equal).with("blorp", "blah")
+    Guava::Test.any_instance.expects(:refute_equal).with("blah", "blorp")
+    Guava::Test.any_instance.expects(:refute_equal).with("blorp", "blah")
 
     @test.refute_output("blah", "blorp") do
       $stdout.print "blorp"
@@ -133,8 +133,8 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_refute_output_regex_success
-    Guava::TestCase.any_instance.expects(:refute_match).with(/blah\s/, "Blorp, blorp blorp")
-    Guava::TestCase.any_instance.expects(:refute_match).with(/, blo/, "Blah, blah blah")
+    Guava::Test.any_instance.expects(:refute_match).with(/blah\s/, "Blorp, blorp blorp")
+    Guava::Test.any_instance.expects(:refute_match).with(/, blo/, "Blah, blah blah")
 
     @test.refute_output(/blah\s/, /, blo/) do
       $stdout.print "Blorp, blorp blorp"
@@ -143,13 +143,13 @@ class TestCaseTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_assert_silent
-    Guava::TestCase.any_instance.expects(:assert_output).with("", "")
+    Guava::Test.any_instance.expects(:assert_output).with("", "")
 
     @test.assert_silent { nil }
   end
 
   def test_refute_silent
-    Guava::TestCase.any_instance.expects(:refute_output).with("", "")
+    Guava::Test.any_instance.expects(:refute_output).with("", "")
 
     @test.refute_silent { nil }
   end

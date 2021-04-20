@@ -16,7 +16,7 @@ module Guava
     def test
       require_tests(files)
 
-      ractors = Guava::TestCase.classes.each_slice(classes_per_group).flat_map do |class_group|
+      ractors = Guava::Test.classes.each_slice(classes_per_group).flat_map do |class_group|
         Ractor.new(class_group) do |tests|
           tests.map { |test, line_numbers| test.run(line_numbers) }
         end
@@ -40,7 +40,7 @@ module Guava
 
     # Number of classes per Ractor group
     def classes_per_group
-      (Guava::TestCase.classes.length.to_f / Etc.nprocessors).ceil
+      (Guava::Test.classes.length.to_f / Etc.nprocessors).ceil
     end
 
     # Require the test files. If none selected, run entire suite
@@ -51,7 +51,7 @@ module Guava
         files.each do |f|
           file, line_number = f.split(":")
           require File.expand_path(file)
-          Guava::TestCase.add_line_number(line_number) if line_number
+          Guava::Test.add_line_number(line_number) if line_number
         end
       end
     end
