@@ -1,6 +1,6 @@
 # Guava
 
-Guava is an experimental test framework built with Ractors using [Minitest](https://github.com/seattlerb/minitest) inspired assertions.
+Guava is an experimental test framework built with Ractors for parallel execution using [Minitest](https://github.com/seattlerb/minitest) inspired assertions.
 
 ## Installation
 
