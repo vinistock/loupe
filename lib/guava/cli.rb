@@ -14,7 +14,7 @@ module Guava
     desc "test", "run tests"
     argument("files", required: false, desc: "The list of test files to run", type: :array)
     def test
-      require_tests(files)
+      require_tests
 
       ractors = Guava::Test.classes.each_slice(classes_per_group).flat_map do |class_group|
         Ractor.new(class_group) do |tests|
@@ -44,9 +44,11 @@ module Guava
     end
 
     # Require the test files. If none selected, run entire suite
-    def require_tests(files)
+    def require_tests
       if files.nil?
-        Dir["#{Dir.pwd}/test/**/*_test.rb"].each { |f| require f }
+        Dir["#{Dir.pwd}/test/**/*_test.rb"]
+          .tap(&:shuffle!)
+          .each { |f| require f }
       else
         files.each do |f|
           file, line_number = f.split(":")
