@@ -8,6 +8,7 @@ AllCops:
   NewCops: enable
   Exclude:
   - vendor/bundle/**/*
+  - suite/test/fake/**/*
 Layout/LineLength:
   Max: 120
 Style/StringLiterals:
