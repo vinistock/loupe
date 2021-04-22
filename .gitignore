@@ -13,3 +13,4 @@
 mkmf.log
 suite/test/fake/guava/*.rb
 suite/test/fake/minitest/*.rb
+suite/test/fake/parallel/*.rb

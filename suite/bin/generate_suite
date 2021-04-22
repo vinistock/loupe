@@ -8,16 +8,19 @@ unless framework
   return
 end
 
-test_body = (0...50).map do
+test_body = (0...50).map do |i|
   <<~BODY
-    def test_the_truth
+    def test_the_truth_#{i}
       assert true
     end
   BODY
 end.join("\n")
 
-test_helper = if framework == "guava"
+test_helper = case framework
+              when "guava"
                 'require "test_helper"'
+              when "parallel"
+                'require_relative "../parallel_test_helper"'
               else
                 <<~STRING
                   $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
@@ -26,6 +29,15 @@ test_helper = if framework == "guava"
                 STRING
               end
 
+parent_class = case framework
+               when "guava"
+                 "Guava::Test"
+               when "minitest"
+                 "Minitest::Test"
+               else
+                 "ActiveSupport::TestCase"
+               end
+
 (0...1000).map do |i|
   File.open("#{__dir__}/../test/fake/#{framework}/fake_#{i}_test.rb", "w") do |f|
     f.write(<<~CONTENT)
@@ -33,7 +45,7 @@ test_helper = if framework == "guava"
 
       #{test_helper}
 
-      class #{framework.capitalize}Fake#{i}Test < #{framework.capitalize}::Test
+      class #{framework.capitalize}Fake#{i}Test < #{parent_class}
         def setup
           @number = #{i}
         end

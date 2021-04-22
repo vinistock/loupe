@@ -5,12 +5,12 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in ant.gemspec
 gemspec
 
+gem "activesupport", require: false
 gem "byebug"
 gem "minitest"
 gem "mocha"
 gem "purdytest"
 gem "rake"
-gem "rake-compiler"
 gem "rubocop"
 gem "rubocop-minitest"
 gem "rubocop-packaging"
