@@ -6,4 +6,4 @@ $LOAD_PATH.unshift(File.expand_path("../test", __dir__))
 
 require "guava"
 
-Guava::Cli.start(ARGV)
+Guava::Cli.new
