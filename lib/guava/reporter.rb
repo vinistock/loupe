@@ -9,8 +9,9 @@ module Guava
     attr_reader :test_count, :assertion_count, :success_count, :failure_count,
                 :failure_report
 
-    def initialize(io = $stdout)
+    def initialize(io = $stdout, options = {})
       @io = io
+      @color = Color.new(options[:color])
       @test_count = 0
       @assertion_count = 0
       @success_count = 0
@@ -27,12 +28,12 @@ module Guava
     end
 
     def increment_success_count
-      @io.print("\033[1;32m.\033[0m")
+      @io.print(@color.p(".", :green))
       @success_count += 1
     end
 
     def increment_failure_count(file_name, test_name, line_number, message)
-      @io.print("\033[1;31mF\033[0m")
+      @io.print(@color.p("F", :red))
       @failure_report[file_name][test_name] = { message: message, line_number: line_number }
       @failure_count += 1
     end

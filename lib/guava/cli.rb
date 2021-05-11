@@ -14,6 +14,8 @@ module Guava
     TEXT
 
     def initialize
+      @options = {}
+
       OptionParser.new do |opts|
         opts.banner = USAGE
 
@@ -21,7 +23,12 @@ module Guava
           warn Guava::VERSION
           exit(0)
         end
+
+        opts.on("--color", "--[no-]color", "Enable or disable color in the output") do |value|
+          @options[:color] = value
+        end
       end.parse!
+      @options.freeze
 
       @files = ARGV
       start
@@ -33,8 +40,8 @@ module Guava
       require_tests
 
       ractors = Guava::Test.classes.each_slice(classes_per_group).flat_map do |class_group|
-        Ractor.new(class_group) do |tests|
-          tests.map { |test, line_numbers| test.run(line_numbers) }
+        Ractor.new(class_group, @options) do |tests, options|
+          tests.map { |test, line_numbers| test.run(line_numbers, options) }
         end
       end
 
