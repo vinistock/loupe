@@ -18,7 +18,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_increment_success_count
-    $stdout.expects(:print).with("\033[1;32m.\033[0m")
+    $stdout.expects(:print).with(".")
     reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@success_count)
@@ -26,7 +26,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_increment_failure_count
-    $stdout.expects(:print).with("\033[1;31mF\033[0m")
+    $stdout.expects(:print).with("F")
     reporter = Guava::Reporter.new
     failure_report = {
       "test/my_test.rb" => {
@@ -40,7 +40,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_addition_operator
-    $stdout.expects(:print).with("\033[1;32m.\033[0m")
+    $stdout.expects(:print).with(".")
     reporter = Guava::Reporter.new
     second_reporter = Guava::Reporter.new
 
@@ -53,7 +53,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_exit_status
-    $stdout.expects(:print).with("\033[1;31mF\033[0m")
+    $stdout.expects(:print).with("F")
     reporter = Guava::Reporter.new
 
     assert_equal 0, reporter.exit_status
