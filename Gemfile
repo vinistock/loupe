@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in ant.gemspec
+# Specify your gem's dependencies in guava.gemspec
 gemspec
 
 gem "activesupport", require: false
@@ -17,3 +17,4 @@ gem "rubocop-packaging"
 gem "rubocop-performance"
 gem "rubocop-rake"
 gem "solargraph"
+gem "yard"

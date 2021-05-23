@@ -12,39 +12,3 @@ class MyTest < Guava::Test
     assert true
   end
 end
-
-def assert_assertion(name, success_args, failure_args, message)
-  define_method("test_#{name}_success") do
-    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
-      equal && message.match?(msg)
-    end
-
-    @test.send(name, *success_args)
-  end
-
-  define_method("test_#{name}_failure") do
-    Guava::Test.any_instance.expects(:assert).with do |equal, msg|
-      !equal && message.match?(msg)
-    end
-
-    @test.send(name, *failure_args)
-  end
-end
-
-def assert_refute(name, success_args, failure_args, message)
-  define_method("test_#{name}_success") do
-    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
-      !equal && message.match?(msg)
-    end
-
-    @test.send(name, *success_args)
-  end
-
-  define_method("test_#{name}_failure") do
-    Guava::Test.any_instance.expects(:refute).with do |equal, msg|
-      equal && message.match?(msg)
-    end
-
-    @test.send(name, *failure_args)
-  end
-end

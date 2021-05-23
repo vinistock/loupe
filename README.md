@@ -1,22 +1,24 @@
 # Guava
 
-Guava is an experimental test framework built with Ractors for parallel execution using [Minitest](https://github.com/seattlerb/minitest) inspired assertions.
+Guava is a test framework built with Ractors for parallel execution.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the gem to the `Gemfile`.
 
 ```ruby
 gem "guava"
 ```
 
 And then execute:
+```shell
+bundle install
+```
 
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install guava
+Optionally, install bundler binstubs in your application.
+```shell
+bundle binstub guava
+```
 
 ## Usage
 
@@ -30,29 +32,35 @@ Tests need to inherit from `Guava::Test`, like the example below.
 require "test_helper"
 
 class MyTest < Guava::Test
-  def setup
+  def before
     @author = Author.create(name: "John")
     @post = Post.create(author: @author)
   end
 
-  def teardown
+  def after
     @author.destroy
     @post.destroy
   end
 
   def test_post_is_linked_to_author
-    assert_equal "John", @post.author.name
+    expect(@post.author.name).to_be_equal_to("John")
   end
 end
 ```
 
-To run the test suite, invoke the executable (optionally passing a list of test files). The `test` command is the default, but explicitly passing it also works.
+To run the test suite, invoke the executable. If a binstub was generated, prefer the binstub over `bundle exec`.
 
 ```shell
-$ bundle exec guava
-$ bundle exec guava test/post_test.rb
-$ bundle exec guava test test/post_test.rb test/author_test.rb
+bundle exec guava
+bin/guava test/post_test.rb test/author_test.rb
 ```
+
+## Credits
+
+This project draws a lot of inspiration from other Ruby test frameworks, namely
+
+- [Minitest](https://github.com/seattlerb/minitest)
+- [rspec](https://github.com/rspec/rspec)
 
 ## Contributing
 
