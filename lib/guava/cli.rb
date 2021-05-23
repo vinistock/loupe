@@ -14,7 +14,9 @@ module Guava
     TEXT
 
     def initialize
-      @options = {}
+      @options = {
+        color: true
+      }
 
       OptionParser.new do |opts|
         opts.banner = USAGE
