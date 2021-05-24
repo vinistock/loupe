@@ -9,10 +9,12 @@ module Guava
   # The Cli class defines all available
   # commands and their options
   class Cli
+    # @return [String]
     USAGE = <<~TEXT
       Usage: [test_list] [options]
     TEXT
 
+    # @return [void]
     def initialize
       @options = {
         color: true
@@ -38,6 +40,7 @@ module Guava
 
     private
 
+    # @return [void]
     def start
       require_tests
 
@@ -52,10 +55,12 @@ module Guava
       exit(reporter.exit_status)
     end
 
+    # @return [Integer]
     def classes_per_group
       (Guava::Test.classes.length.to_f / Etc.nprocessors).ceil
     end
 
+    # @return [void]
     def require_tests
       require "#{Dir.pwd}/test/test_helper"
 

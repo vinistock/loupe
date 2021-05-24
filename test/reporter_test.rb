@@ -10,11 +10,11 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.increment_test_count
   end
 
-  def test_increment_assertion_count
+  def test_increment_expectation_count
     reporter = Guava::Reporter.new
 
-    assert_equal 0, reporter.instance_variable_get(:@assertion_count)
-    assert_equal 1, reporter.increment_assertion_count
+    assert_equal 0, reporter.instance_variable_get(:@expectation_count)
+    assert_equal 1, reporter.increment_expectation_count
   end
 
   def test_increment_success_count
@@ -45,10 +45,10 @@ class ReporterTest < Minitest::Test
     second_reporter = Guava::Reporter.new
 
     reporter.increment_success_count
-    second_reporter.increment_assertion_count
+    second_reporter.increment_expectation_count
     reporter += second_reporter
 
-    assert_equal 1, reporter.assertion_count
+    assert_equal 1, reporter.expectation_count
     assert_equal 1, reporter.success_count
   end
 

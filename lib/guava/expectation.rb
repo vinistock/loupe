@@ -14,7 +14,7 @@ module Guava
   # in such a way that they read in plain English.
   # E.g.: expect(something).to_be_truthy
   #
-  # @see {Guava::Test#expect}
+  # @see Guava::Test#expect
   class Expectation # rubocop:disable Metrics/ClassLength
     class ExpectationFailed < StandardError; end
 
@@ -481,7 +481,7 @@ module Guava
     # @param failure_message [String]
     # @return [Guava::Expectation]
     def assert(value, failure_message)
-      @reporter.increment_assertion_count
+      @reporter.increment_expectation_count
       return self if value
 
       @reporter.increment_failure_count(
