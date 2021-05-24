@@ -5,23 +5,44 @@ module Guava
   #
   # The parent class for tests. Tests should
   # inherit from this class in order to be run.
-  class Test # rubocop:disable Metrics/ClassLength
-    class AssertionFailed < StandardError; end
+  class Test
+    # @return [Guava::Reporter]
+    attr_reader :reporter
 
+    # @return [Integer]
+    attr_reader :line_number
+
+    # @return [String]
+    attr_reader :file
+
+    # @return [Guava::Color]
+    attr_reader :color
+
+    # @return [String]
+    attr_reader :name
+
+    # @return [Hash<Class, Array<Integer>>]
     def self.classes
       @classes ||= {}
     end
 
+    # @param number [Integer]
+    # @return [void]
     def self.add_line_number(number)
       classes[@current_class] << number
     end
 
+    # @param test_class [Class]
+    # @return [void]
     def self.inherited(test_class)
       @current_class = test_class
       classes[test_class] = []
       super
     end
 
+    # @param line_numbers [Array<Integer>]
+    # @param options [Hash<Symbol, BasicObject>]
+    # @return [Guava::Reporter]
     def self.run(line_numbers = [], options = {})
       reporter = Reporter.new($stdout, options)
       test_methods = instance_methods(false).grep(/^test_.*/)
@@ -35,13 +56,17 @@ module Guava
       test_methods.shuffle!
       test_methods.each do |method_name|
         new(reporter, method_name, options).run
-      rescue AssertionFailed
+      rescue Guava::Expectation::ExpectationFailed
         next
       end
 
       reporter
     end
 
+    # @param reporter [Guava::Reporter]
+    # @param method_name [Symbol]
+    # @param options [Hash<Symbol, BasicObject>]
+    # @return [Guava::Test]
     def initialize(reporter, method_name, options = {})
       @reporter = reporter
       @color = Color.new(options[:color])
@@ -50,219 +75,58 @@ module Guava
       @file, @line_number = @method.source_location
     end
 
-    def setup; end
-
-    def teardown; end
-
+    # Run the instantiated test, which corresponds to a single
+    # method.
+    # @return [void]
     def run
       @reporter.increment_test_count
-      setup
+      before
       @method.call
-      teardown
+      after
       @reporter.increment_success_count
     end
 
-    def assert(actual, failure_message = nil)
-      @reporter.increment_assertion_count
-      return if actual
+    def before; end
 
-      failure_message ||= <<~MESSAGE
-        Expected #{@color.p(actual, :red)} to be #{@color.p('truthy', :green)}.
-      MESSAGE
+    def after; end
 
-      @reporter.increment_failure_count(
-        @file,
-        @name,
-        @line_number,
-        failure_message
-      )
+    protected
 
-      raise AssertionFailed
+    # expect(target)
+    #
+    # Initial construct for any expectation. Instantiates an Expectation object
+    # on which verifications can be performed. Any expectation can be chained to reuse
+    # the object if the `target` is the same.
+    #
+    # Example:
+    #   expect(collection)
+    #     .to_not_be_empty
+    #     .to_include(object)
+    #     .be_an_instance_of(Array)
+    #
+    # @return [Guava::Expectation]
+    def expect(target)
+      Expectation.new(target, self)
     end
 
-    def refute(actual, failure_message = nil)
-      @reporter.increment_assertion_count
-      return unless actual
-
-      failure_message ||= <<~MESSAGE
-        Expected #{@color.p(actual, :red)} not to be #{@color.p('truthy', :green)}.
-      MESSAGE
-
-      @reporter.increment_failure_count(
-        @file,
-        @name,
-        @line_number,
-        failure_message
-      )
-
-      raise AssertionFailed
-    end
-
-    def assert_equal(expected, actual, failure_message = nil)
-      failure_message ||= <<~MESSAGE
-        Expected #{@color.p(actual, :red)} to be equal to #{@color.p(expected, :green)}."
-      MESSAGE
-
-      assert(expected == actual, failure_message)
-    end
-
-    def refute_equal(expected, actual, failure_message = nil)
-      failure_message ||= <<~MESSAGE
-        Expected #{@color.p(actual, :red)} to not be equal to #{@color.p(expected, :green)}."
-      MESSAGE
-
-      refute(expected == actual, failure_message)
-    end
-
-    def assert_empty(actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(actual, :red)} to be empty."
-      assert(actual.empty?, failure_message)
-    end
-
-    def refute_empty(actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(actual, :red)} to not be empty."
-      refute(actual.empty?, failure_message)
-    end
-
-    def assert_respond_to(object, method, failure_message = nil)
-      failure_message ||= <<~MESSAGE
-        Expected #{@color.p(object, :green)} to respond to #{@color.p(method, :green)}.
-      MESSAGE
-
-      assert(object.respond_to?(method.to_sym), failure_message)
-    end
-
-    def refute_respond_to(object, method, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} not to respond to #{@color.p(method, :green)}."
-      refute(object.respond_to?(method.to_sym), failure_message)
-    end
-
-    def assert_includes(collection, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(collection, :green)} to include #{@color.p(object, :green)}."
-      assert(collection.include?(object), failure_message)
-    end
-
-    def refute_includes(collection, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(collection, :green)} to not include #{@color.p(object, :green)}."
-      refute(collection.include?(object), failure_message)
-    end
-
-    def assert_nil(actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(actual, :red)} to be nil."
-      assert(actual.nil?, failure_message)
-    end
-
-    def refute_nil(actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(actual, :red)} to not be nil."
-      refute(actual.nil?, failure_message)
-    end
-
-    def assert_instance_of(klass, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to be an instance of #{@color.p(klass, :green)}, " \
-        "not #{@color.p(object.class, :red)}."
-
-      assert(object.instance_of?(klass), failure_message)
-    end
-
-    def refute_instance_of(klass, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to not be an instance of #{@color.p(klass, :red)}."
-
-      refute(object.instance_of?(klass), failure_message)
-    end
-
-    def assert_kind_of(klass, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to be a kind of #{@color.p(klass, :red)}, " \
-        "not #{@color.p(object.class, :green)}."
-
-      assert(object.is_a?(klass), failure_message)
-    end
-
-    def refute_kind_of(klass, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to not be a kind of #{@color.p(klass, :red)}."
-
-      refute(object.is_a?(klass), failure_message)
-    end
-
-    def assert_predicate(object, method, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to be #{@color.p(method, :red)}."
-
-      assert(object.public_send(method), failure_message)
-    end
-
-    def refute_predicate(object, method, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(object, :green)} to not be #{@color.p(method, :red)}."
-
-      refute(object.public_send(method), failure_message)
-    end
-
-    def assert_match(matcher, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(matcher, :red)} to match #{@color.p(object, :green)}."
-      assert_respond_to(matcher, :=~)
-
-      matcher = Regexp.new(Regexp.escape(matcher)) if matcher.is_a?(String)
-      assert(matcher =~ object, failure_message)
-    end
-
-    def refute_match(matcher, object, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(matcher, :red)} to not match #{@color.p(object, :green)}."
-      assert_respond_to(matcher, :=~)
-
-      matcher = Regexp.new(Regexp.escape(matcher)) if matcher.is_a?(String)
-      refute(matcher =~ object, failure_message)
-    end
-
-    def assert_same(expected, actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(expected, :green)} (#{@color.p(expected.object_id, :green)}) " \
-        "to be the same as #{@color.p(actual, :red)} (#{@color.p(actual.object_id, :red)})."
-
-      assert(expected.equal?(actual), failure_message)
-    end
-
-    def refute_same(expected, actual, failure_message = nil)
-      failure_message ||= "Expected #{@color.p(expected, :green)} (#{@color.p(expected.object_id, :green)}) to not be" \
-        " the same as #{@color.p(actual, :red)} (#{@color.p(actual.object_id, :red)})."
-
-      refute(expected.equal?(actual), failure_message)
-    end
-
-    def assert_path_exists(path, failure_message = nil)
-      failure_message ||= "Expected path '#{@color.p(path, :red)}' to exist."
-
-      assert(File.exist?(path), failure_message)
-    end
-
-    def refute_path_exists(path, failure_message = nil)
-      failure_message ||= "Expected path '#{@color.p(path, :red)}' to not exist."
-
-      refute(File.exist?(path), failure_message)
-    end
-
-    def assert_in_delta(expected, actual, delta = 0.001, failure_message = nil)
-      difference = (expected - actual).abs
-      failure_message ||= "Expected |#{expected} - #{actual}| " \
-        "(#{@color.p(difference, :red)}) to be <= #{@color.p(delta, :green)}."
-
-      assert(delta >= difference, failure_message)
-    end
-
-    def refute_in_delta(expected, actual, delta = 0.001, failure_message = nil)
-      difference = (expected - actual).abs
-      failure_message ||= "Expected |#{expected} - #{actual}| " \
-        "(#{@color.p(difference, :red)}) to not be <= #{@color.p(delta, :green)}."
-
-      refute(delta >= difference, failure_message)
-    end
-
-    def assert_in_epsilon(expected, actual, epsilon = 0.001, failure_message = nil)
-      assert_in_delta(expected, actual, [expected.abs, actual.abs].min * epsilon, failure_message)
-    end
-
-    def refute_in_epsilon(expected, actual, epsilon = 0.001, failure_message = nil)
-      refute_in_delta(expected, actual, [expected.abs, actual.abs].min * epsilon, failure_message)
-    end
-
-    def assert_output(stdout = nil, stderr = nil, &block)
-      raise ArgumentError, "assert_output requires a block to capture output." unless block
+    # expect_output_to_match(stdout, stderr) { block }
+    #
+    # Expects the output generated by the execution of `block` to match the matchers used
+    # for `stdout` and `stderr`. If the `block` only prints to one of the two, simply pass
+    # `nil` for the one that is not of interest.
+    #
+    # Example:
+    # expect_output_to_match("foo") do
+    #   puts "foo"
+    # end
+    #
+    # expect_output_to_match(nil, /error: .*/) do
+    #   $stderr.puts "error: operation failed"
+    # end
+    #
+    # @return [void]
+    def expect_output_to_match(stdout = nil, stderr = nil, &block)
+      raise ArgumentError, "expect_output_to_match requires a block to capture output." unless block
 
       out, err = capture_io(&block)
 
@@ -270,8 +134,24 @@ module Guava
       match_or_equal(stderr, err) if stderr
     end
 
-    def refute_output(stdout = nil, stderr = nil, &block)
-      raise ArgumentError, "assert_output requires a block to capture output." unless block
+    # expect_output_to_not_match(stdout, stderr) { block }
+    #
+    # Expects the output generated by the execution of `block` to not match the matchers used
+    # for `stdout` and `stderr`. If the `block` only prints to one of the two, simply pass
+    # `nil` for the one that is not of interest.
+    #
+    # Example:
+    # expect_output_to_not_match("foo") do
+    #   puts "bar"
+    # end
+    #
+    # expect_output_to_not_match(nil, /error: network failed.*/) do
+    #   $stderr.puts "error: record not unique"
+    # end
+    #
+    # @return [void]
+    def expect_output_to_not_match(stdout = nil, stderr = nil, &block)
+      raise ArgumentError, "expect_output_to_not_match requires a block to capture output." unless block
 
       out, err = capture_io(&block)
 
@@ -279,24 +159,55 @@ module Guava
       refute_match_or_equal(stderr, err) if stderr
     end
 
-    def assert_silent(&block)
-      assert_output("", "", &block)
+    # expect_output_to_be_empty { block }
+    #
+    # Expects the output generated by `block` to be empty for both `$stdout` and `$stderr`.
+    # That is, expects the `block` to not print anything to either `$stdout` or `$stderr`.
+    # For matching to the output of the `block`, see {#expect_output_to_match}.
+    #
+    # Example:
+    # expect_output_to_be_empty do
+    #   puts "bar" if false
+    # end
+    #
+    # @return [void]
+    def expect_output_to_be_empty(&block)
+      expect_output_to_match("", "", &block)
     end
 
-    def refute_silent(&block)
-      refute_output("", "", &block)
+    # expect_output_to_not_be_empty { block }
+    #
+    # Expects the output generated by `block` to not be empty for both `$stdout` and `$stderr`.
+    # That is, expects the `block` to print something to either `$stdout` or `$stderr`.
+    # For matching to the output of the `block`, see {#expect_output_to_not_match}.
+    #
+    # Example:
+    # expect_output_to_not_be_empty do
+    #   puts "foo"
+    # end
+    #
+    # @return [void]
+    def expect_output_to_not_be_empty(&block)
+      expect_output_to_not_match("", "", &block)
     end
 
     private
 
+    # @param matcher [Regexp, String]
+    # @param output [String]
+    # @return [void]
     def match_or_equal(matcher, output)
-      matcher.is_a?(Regexp) ? assert_match(matcher, output) : assert_equal(matcher, output)
+      matcher.is_a?(Regexp) ? expect(matcher).to_match(output) : expect(matcher).to_be_equal_to(output)
     end
 
+    # @param matcher [Regexp, String]
+    # @param output [String]
+    # @return [void]
     def refute_match_or_equal(matcher, output)
-      matcher.is_a?(Regexp) ? refute_match(matcher, output) : refute_equal(matcher, output)
+      matcher.is_a?(Regexp) ? expect(matcher).to_not_match(output) : expect(matcher).to_not_be_equal_to(output)
     end
 
+    # @return [Array<String>]
     def capture_io
       new_stdout = StringIO.new
       new_stderr = StringIO.new
@@ -311,24 +222,6 @@ module Guava
     ensure
       $stdout = stdout
       $stderr = stderr
-    end
-
-    def assert_operator(first_object, operator, second_object, failure_message = nil)
-      return assert_predicate(first_object, operator, failure_message) unless second_object
-
-      failure_message ||= "Expected #{@color.p(first_object, :red)} to be #{operator}" \
-        " #{@color.p(second_object, :red)}."
-
-      assert(first_object.public_send(operator, second_object), failure_message)
-    end
-
-    def refute_operator(first_object, operator, second_object, failure_message = nil)
-      return refute_predicate(first_object, operator, failure_message) unless second_object
-
-      failure_message ||= "Expected #{@color.p(first_object, :red)} to not be #{operator}" \
-        " #{@color.p(second_object, :red)}."
-
-      refute(first_object.public_send(operator, second_object), failure_message)
     end
 
     # Missing assertions (+ refutes)

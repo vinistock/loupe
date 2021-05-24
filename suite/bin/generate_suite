@@ -23,6 +23,49 @@ parent_class = case framework
                  "ActiveSupport::TestCase"
                end
 
+def body(framework, test_number) # rubocop:disable Metrics/MethodLength
+  case framework
+  when "guava"
+    <<~BODY
+      def before
+        @number = #{test_number}
+      end
+
+      def test_quick
+        expect(true).to_be_truthy
+      end
+
+      def test_failing_test
+        expect(0).to_be_equal_to(#{test_number} % 20)
+      end
+
+      def test_sleepy
+        sleep 0.2
+        expect(true).to_be_truthy
+      end
+    BODY
+  else
+    <<~BODY
+      def setup
+        @number = #{test_number}
+      end
+
+      def test_quick
+        assert(true)
+      end
+
+      def test_failing_test
+        assert_equal 0, #{test_number} % 20
+      end
+
+      def test_sleepy
+        sleep 0.2
+        assert(true)
+      end
+    BODY
+  end
+end
+
 (0...100).map do |i|
   File.open("#{__dir__}/../test/fake/#{framework}/fake_#{i}_test.rb", "w") do |f|
     f.write(<<~CONTENT)
@@ -31,22 +74,7 @@ parent_class = case framework
       require_relative "../#{framework}_test_helper"
 
       class #{framework.capitalize}Fake#{i}Test < #{parent_class}
-        def setup
-          @number = #{i}
-        end
-
-        def test_quick
-          assert(true)
-        end
-
-        def test_failing_test
-          refute_equal 0, #{i} % 20
-        end
-
-        def test_sleepy
-          sleep 0.2
-          assert(true)
-        end
+        #{body(framework, i)}
       end
     CONTENT
   end

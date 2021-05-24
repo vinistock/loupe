@@ -101,6 +101,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rake
   solargraph
+  yard
 
 BUNDLED WITH
    2.2.17
