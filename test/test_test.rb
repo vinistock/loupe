@@ -17,7 +17,7 @@ class TestTest < Minitest::Test
     MyTest.any_instance.expects(:after)
     Guava::Reporter.any_instance.expects(:increment_success_count)
 
-    MyTest.run
+    MyTest.run(:test_example)
   end
 
   def test_setup_exists

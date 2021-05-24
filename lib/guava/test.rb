@@ -40,26 +40,21 @@ module Guava
       super
     end
 
-    # @param line_numbers [Array<Integer>]
+    # @return [Array<Symbol>]
+    def self.test_list
+      instance_methods(false).grep(/^test.*/)
+    end
+
+    # Run a single test with designated by `method_name`
+    #
+    # @param method_name [Symbol]
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Guava::Reporter]
-    def self.run(line_numbers = [], options = {})
-      reporter = Reporter.new($stdout, options)
-      test_methods = instance_methods(false).grep(/^test_.*/)
-
-      unless line_numbers.empty?
-        test_methods.select! do |method_name|
-          line_numbers.include?(instance_method(method_name).source_location&.last.to_s)
-        end
-      end
-
-      test_methods.shuffle!
-      test_methods.each do |method_name|
-        new(reporter, method_name, options).run
-      rescue Guava::Expectation::ExpectationFailed
-        next
-      end
-
+    def self.run(method_name, options = {})
+      reporter = Reporter.new(options)
+      new(reporter, method_name, options).run
+      reporter
+    rescue Guava::Expectation::ExpectationFailed
       reporter
     end
 

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "etc"
 require "optparse"
 
 module Guava
@@ -43,21 +42,7 @@ module Guava
     # @return [void]
     def start
       require_tests
-
-      ractors = Guava::Test.classes.each_slice(classes_per_group).flat_map do |class_group|
-        Ractor.new(class_group, @options) do |tests, options|
-          tests.map { |test, line_numbers| test.run(line_numbers, options) }
-        end
-      end
-
-      reporter = ractors.flat_map(&:take).reduce(:+) # rubocop:disable Performance/Sum
-      reporter.print_summary
-      exit(reporter.exit_status)
-    end
-
-    # @return [Integer]
-    def classes_per_group
-      (Guava::Test.classes.length.to_f / Etc.nprocessors).ceil
+      exit(Executor.new(@options).run)
     end
 
     # @return [void]

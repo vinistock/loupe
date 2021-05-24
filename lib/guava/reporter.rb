@@ -21,11 +21,9 @@ module Guava
     # @return [Array<Guava::Failure>]
     attr_reader :failures
 
-    # @param io [IO]
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Guava::Reporter]
-    def initialize(io = $stdout, options = {})
-      @io = io
+    def initialize(options = {})
       @color = Color.new(options[:color])
       @test_count = 0
       @expectation_count = 0
@@ -46,13 +44,13 @@ module Guava
 
     # @return [void]
     def increment_success_count
-      @io.print(@color.p(".", :green))
+      print(@color.p(".", :green))
       @success_count += 1
     end
 
     # @return [void]
     def increment_failure_count(file_name, test_name, line_number, message)
-      @io.print(@color.p("F", :red))
+      print(@color.p("F", :red))
       @failures << Failure.new(file_name, test_name, message, line_number)
       @failure_count += 1
     end
@@ -77,8 +75,8 @@ module Guava
         report << @failures.map!(&:to_s).join("\n")
       end
 
-      @io.print "\n\n"
-      @io.print <<~SUMMARY
+      print "\n\n"
+      print <<~SUMMARY
         Tests: #{@test_count} Expectations: #{@expectation_count}
         Passed: #{@success_count} Failures: #{@failure_count}#{report}
       SUMMARY
