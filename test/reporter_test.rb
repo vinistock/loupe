@@ -18,24 +18,24 @@ class ReporterTest < Minitest::Test
   end
 
   def test_increment_success_count
-    $stdout.expects(:print).with(".")
     reporter = Guava::Reporter.new
+    reporter.expects(:print).with(".")
 
     assert_equal 0, reporter.instance_variable_get(:@success_count)
     assert_equal 1, reporter.increment_success_count
   end
 
   def test_increment_failure_count
-    $stdout.expects(:print).with("F")
     reporter = Guava::Reporter.new
+    reporter.expects(:print).with("F")
 
     assert_equal 1, reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.")
     assert_equal 1, reporter.instance_variable_get(:@failures).length
   end
 
   def test_addition_operator
-    $stdout.expects(:print).with(".")
     reporter = Guava::Reporter.new
+    reporter.expects(:print).with(".")
     second_reporter = Guava::Reporter.new
 
     reporter.increment_success_count
@@ -47,8 +47,8 @@ class ReporterTest < Minitest::Test
   end
 
   def test_exit_status
-    $stdout.expects(:print).with("F")
     reporter = Guava::Reporter.new
+    reporter.expects(:print).with("F")
 
     assert_equal 0, reporter.exit_status
     reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.")
