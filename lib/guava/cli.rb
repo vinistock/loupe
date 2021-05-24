@@ -57,6 +57,8 @@ module Guava
     end
 
     def require_tests
+      require "#{Dir.pwd}/test/test_helper"
+
       if @files.nil?
         Dir["#{Dir.pwd}/test/**/*_test.rb"]
           .tap(&:shuffle!)

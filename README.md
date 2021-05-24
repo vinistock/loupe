@@ -24,12 +24,10 @@ bundle binstub guava
 
 Because of current Ractor limitations, Guava implements only one syntax for writing tests: using methods prefixed with `test_`. The other common syntax of using the `test` method with a block is not supported.
 
-Tests need to inherit from `Guava::Test`, like the example below.
+Tests need to inherit from `Guava::Test`, but do not need to explicitly require test_helper, like the example below.
 
 ```ruby
 # frozen_string_literal: true
-
-require "test_helper"
 
 class MyTest < Guava::Test
   def before

@@ -66,12 +66,18 @@ def body(framework, test_number) # rubocop:disable Metrics/MethodLength
   end
 end
 
+require_line = if framework == "guava"
+                 ""
+               else
+                 "require_relative \"../../#{framework}_test_helper\""
+               end
+
 (0...100).map do |i|
   File.open("#{__dir__}/../test/fake/#{framework}/fake_#{i}_test.rb", "w") do |f|
     f.write(<<~CONTENT)
       # frozen_string_literal: true
 
-      require_relative "../#{framework}_test_helper"
+      #{require_line}
 
       class #{framework.capitalize}Fake#{i}Test < #{parent_class}
         #{body(framework, i)}
