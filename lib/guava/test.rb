@@ -86,8 +86,10 @@ module Guava
       @reporter.increment_success_count
     end
 
+    # @return [void]
     def before; end
 
+    # @return [void]
     def after; end
 
     protected

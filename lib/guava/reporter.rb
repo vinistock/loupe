@@ -18,8 +18,8 @@ module Guava
     # @return [Integer]
     attr_reader :failure_count
 
-    # @return [Hash<String, Hash<String, Hash<Symbol => String,Integer>>>]
-    attr_reader :failure_report
+    # @return [Array<Guava::Failure>]
+    attr_reader :failures
 
     # @param io [IO]
     # @param options [Hash<Symbol, BasicObject>]
@@ -31,7 +31,7 @@ module Guava
       @expectation_count = 0
       @success_count = 0
       @failure_count = 0
-      @failure_report = Hash.new { |a, b| a[b] = Hash.new({}) }
+      @failures = []
     end
 
     # @return [void]
@@ -53,7 +53,7 @@ module Guava
     # @return [void]
     def increment_failure_count(file_name, test_name, line_number, message)
       @io.print(@color.p("F", :red))
-      @failure_report[file_name][test_name] = { message: message, line_number: line_number }
+      @failures << Failure.new(file_name, test_name, message, line_number)
       @failure_count += 1
     end
 
@@ -64,21 +64,17 @@ module Guava
       @expectation_count += other.expectation_count
       @success_count += other.success_count
       @failure_count += other.failure_count
-      @failure_report.merge!(other.failure_report)
+      @failures.concat(other.failures)
       self
     end
 
     # @return [void]
     def print_summary
-      if @failure_report.empty?
+      if @failures.empty?
         report = ""
       else
         report = +"\n\n"
-        report << @failure_report.flat_map do |file, result|
-          result.map do |method, info|
-            "#{file}:#{info[:line_number]} at #{method}. #{info[:message]}"
-          end.join("\n")
-        end.join("\n")
+        report << @failures.map!(&:to_s).join("\n")
       end
 
       @io.print "\n\n"

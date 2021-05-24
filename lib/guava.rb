@@ -4,6 +4,7 @@ require "guava/version"
 require "guava/color"
 require "guava/expectation"
 require "guava/test"
+require "guava/failure"
 require "guava/reporter"
 require "guava/cli"
 

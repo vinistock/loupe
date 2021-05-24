@@ -28,15 +28,9 @@ class ReporterTest < Minitest::Test
   def test_increment_failure_count
     $stdout.expects(:print).with("F")
     reporter = Guava::Reporter.new
-    failure_report = {
-      "test/my_test.rb" => {
-        "my_test" => { message: "Expected false to be truthy.", line_number: 32 }
-      }
-    }
 
-    assert_equal 0, reporter.instance_variable_get(:@failure_count)
     assert_equal 1, reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.")
-    assert_equal failure_report, reporter.instance_variable_get(:@failure_report)
+    assert_equal 1, reporter.instance_variable_get(:@failures).length
   end
 
   def test_addition_operator
