@@ -14,9 +14,10 @@ module Guava
     TEXT
 
     # @return [void]
-    def initialize
+    def initialize # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       @options = {
-        color: true
+        color: true,
+        interactive: true
       }
 
       OptionParser.new do |opts|
@@ -29,6 +30,20 @@ module Guava
 
         opts.on("--color", "--[no-]color", "Enable or disable color in the output") do |value|
           @options[:color] = value
+        end
+
+        opts.on("--interactive", "Use interactive output") do
+          @options[:interactive] = true
+        end
+
+        opts.on("--plain", "Use plain non-interactive output") do
+          @options[:interactive] = false
+        end
+
+        opts.on("--editor=EDITOR", "Select the editor to open test files with in interactive mode") do |value|
+          raise ArgumentError, "--editor can only be select in interative mode" unless @options[:interactive]
+
+          @options[:editor] = value
         end
       end.parse!
       @options.freeze

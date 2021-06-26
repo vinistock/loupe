@@ -25,11 +25,13 @@ module Guava
     # @return [Guava::Reporter]
     def initialize(options = {})
       @color = Color.new(options[:color])
+      @options = options
       @test_count = 0
       @expectation_count = 0
       @success_count = 0
       @failure_count = 0
       @failures = []
+      @start_time = Time.now
     end
 
     # @return [void]
@@ -66,25 +68,14 @@ module Guava
       self
     end
 
-    # @return [void]
-    def print_summary
-      if @failures.empty?
-        report = ""
-      else
-        report = +"\n\n"
-        report << @failures.map!(&:to_s).join("\n")
-      end
-
-      print "\n\n"
-      print <<~SUMMARY
-        Tests: #{@test_count} Expectations: #{@expectation_count}
-        Passed: #{@success_count} Failures: #{@failure_count}#{report}
-      SUMMARY
-    end
-
     # @return [Integer]
     def exit_status
       @failure_count.zero? ? 0 : 1
+    end
+
+    # @return [void]
+    def print_summary
+      raise NotImplementedError, "Print must be implemented in the inheriting reporter class"
     end
   end
 end

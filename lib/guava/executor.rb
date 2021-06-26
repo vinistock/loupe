@@ -13,9 +13,8 @@ module Guava
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Guava::Executor]
     def initialize(options)
-      @start_time = Time.now
       @queue = populate_queue
-      @reporter = Reporter.new(options)
+      @reporter = options[:interactive] ? PagedReporter.new(options) : PlainReporter.new(options)
       @workers = (0...Etc.nprocessors).map do
         Ractor.new(options) do |opts|
           loop do
@@ -47,7 +46,6 @@ module Guava
       @workers.each { |w| @reporter += w.take }
 
       @reporter.print_summary
-      puts "\nFinished in #{Time.now - @start_time} seconds"
       @reporter.exit_status
     end
 
