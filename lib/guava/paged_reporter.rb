@@ -28,9 +28,15 @@ module Guava
     # Allow users to navigate through pages of test failures
     # and interact with them.
     # @return [void]
-    def page
+    def page # rubocop:disable Metrics/CyclomaticComplexity
       loop do
         header
+
+        if @failures.empty?
+          puts "All failures marked as fixed"
+          break
+        end
+
         file_preview
         footer
 
@@ -41,6 +47,8 @@ module Guava
           @current_page -= 1 unless @current_page.zero?
         when "o"
           open_editor
+        when "f"
+          @failures.delete_at(@current_page)
         when "q"
           break
         end
@@ -84,7 +92,7 @@ module Guava
       @console.cursor_down(5)
       puts @failures[@current_page]
       @console.cursor_down(2)
-      puts "j (next) / k (previous) / o (open in editor) / q (quit)"
+      puts "j (next) / k (previous) / o (open in editor) / f (mark as fixed) / q (quit)"
     end
 
     # Open the editor selected by options (or defined by $EDITOR) with the current
