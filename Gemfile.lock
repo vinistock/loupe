@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     guava (0.1.0)
+      io-console
 
 GEM
   remote: https://rubygems.org/
@@ -21,6 +22,7 @@ GEM
     e2mmap (0.1.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
+    io-console (0.5.9)
     jaro_winkler (1.5.4)
     kramdown (2.3.1)
       rexml

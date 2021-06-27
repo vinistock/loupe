@@ -51,7 +51,7 @@ module Guava
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Guava::Reporter]
     def self.run(method_name, options = {})
-      reporter = Reporter.new(options)
+      reporter = options[:interactive] ? PagedReporter.new(options) : PlainReporter.new(options)
       new(reporter, method_name, options).run
       reporter
     rescue Guava::Expectation::ExpectationFailed
