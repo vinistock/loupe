@@ -12,7 +12,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
     @test
       .reporter
       .expects(:increment_failure_count)
-      .with(@test.file, @test.name, @test.line_number, "Expected false to be truthy.")
+      .with(@test.file, @test.name, @test.line_number, "Expected false to be truthy.", MyTest)
 
     assert_raises(Guava::Expectation::ExpectationFailed) do
       expect.to_be_truthy

@@ -24,6 +24,7 @@ module Guava
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Guava::Reporter]
     def initialize(options = {})
+      @options = options
       @color = Color.new(options[:color])
       @options = options
       @test_count = 0
@@ -51,9 +52,9 @@ module Guava
     end
 
     # @return [void]
-    def increment_failure_count(file_name, test_name, line_number, message)
+    def increment_failure_count(file_name, test_name, line_number, message, klass)
       print(@color.p("F", :red))
-      @failures << Failure.new(file_name, test_name, message, line_number)
+      @failures << Failure.new(file_name, test_name, message, line_number, klass, @color)
       @failure_count += 1
     end
 

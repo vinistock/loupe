@@ -28,7 +28,7 @@ module Guava
     # Allow users to navigate through pages of test failures
     # and interact with them.
     # @return [void]
-    def page # rubocop:disable Metrics/CyclomaticComplexity
+    def page # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
       loop do
         header
 
@@ -49,6 +49,8 @@ module Guava
           open_editor
         when "f"
           @failures.delete_at(@current_page)
+        when "r"
+          rerun_failure
         when "q"
           break
         end
@@ -90,9 +92,11 @@ module Guava
     # @return [void]
     def footer
       @console.cursor_down(5)
+      puts @status
       puts @failures[@current_page]
       @console.cursor_down(2)
-      puts "j (next) / k (previous) / o (open in editor) / f (mark as fixed) / q (quit)"
+      puts "j (next) / k (previous) / o (open in editor) / f (mark as fixed) / r (rerun test) / q (quit)"
+      @status = nil
     end
 
     # Open the editor selected by options (or defined by $EDITOR) with the current
@@ -120,6 +124,29 @@ module Guava
       ENV["PATH"].split(":").each do |p|
         path = File.join(p.delete("}").delete("{"), editor)
         return path if File.exist?(path)
+      end
+    end
+
+    # Rerun the current failure
+    #
+    # Since the developer is changing the test file to fix it,
+    # we need to unload it from LOADED_FEATURES and require it again.
+    # Otherwise, we would just be re-running the same test loaded in memory
+    # and it would never pass.
+    #
+    # @return void
+    def rerun_failure
+      failure = @failures[@current_page]
+      $LOADED_FEATURES.delete(failure.file_name)
+      require failure.file_name
+
+      reporter = failure.klass.run(failure.test_name, @options)
+
+      if reporter.failures.empty?
+        @status = "#{@color.p('Fixed', :green)}. Click f to remove from list"
+      else
+        @failures[@current_page] = reporter.failures.first
+        @status = @color.p("Still failing", :red)
       end
     end
   end

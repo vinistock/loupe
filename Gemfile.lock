@@ -33,18 +33,18 @@ GEM
     nokogiri (1.11.7-arm64-darwin)
       racc (~> 1.4)
     parallel (1.20.1)
-    parser (3.0.1.1)
+    parser (3.0.2.0)
       ast (~> 2.4.1)
     purdytest (2.0.0)
       minitest (~> 5.5)
     racc (1.5.2)
     rainbow (3.0.0)
-    rake (13.0.3)
+    rake (13.0.6)
     regexp_parser (2.1.1)
     reverse_markdown (2.0.0)
       nokogiri
     rexml (3.2.5)
-    rubocop (1.17.0)
+    rubocop (1.18.3)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -55,15 +55,15 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.7.0)
       parser (>= 3.0.1.1)
-    rubocop-minitest (0.13.0)
+    rubocop-minitest (0.14.0)
       rubocop (>= 0.90, < 2.0)
     rubocop-packaging (0.5.1)
       rubocop (>= 0.89, < 2.0)
-    rubocop-performance (1.11.3)
+    rubocop-performance (1.11.4)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rake (0.5.1)
-      rubocop
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
     ruby-progressbar (1.11.0)
     solargraph (0.42.3)
       backport (~> 1.2)
@@ -108,4 +108,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.21
+   2.2.23

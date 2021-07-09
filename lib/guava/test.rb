@@ -65,7 +65,7 @@ module Guava
     def initialize(reporter, method_name, options = {})
       @reporter = reporter
       @color = Color.new(options[:color])
-      @name = @color.p(method_name, :yellow)
+      @name = method_name
       @method = method(method_name)
       @file, @line_number = @method.source_location
     end

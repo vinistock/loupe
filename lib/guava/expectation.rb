@@ -28,6 +28,7 @@ module Guava
       @file = test.file
       @name = test.name
       @line_number = test.line_number
+      @klass = test.class
     end
 
     # expect(target).to_be_truthy
@@ -170,7 +171,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_be_an_instance_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to be an instance " \
-        "of #{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
+                        "of #{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
 
       assert(@target.instance_of?(klass), failure_message)
     end
@@ -184,7 +185,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_not_be_an_instance_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to not be an instance of " \
-        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
+                        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
 
       assert(!@target.instance_of?(klass), failure_message)
     end
@@ -198,7 +199,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_be_a_kind_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to be a kind of " \
-        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
+                        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
 
       assert(@target.is_a?(klass), failure_message)
     end
@@ -212,7 +213,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_not_be_a_kind_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to not be a kind of " \
-        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
+                        "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
 
       assert(!@target.is_a?(klass), failure_message)
     end
@@ -306,7 +307,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_be_the_same_as(object)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} (#{@color.p(@target.inspect.object_id, :red)}) " \
-        "to be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
+                        "to be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
 
       assert(@target.equal?(object), failure_message)
     end
@@ -323,7 +324,7 @@ module Guava
     # @return [Guava::Expectation]
     def to_not_be_the_same_as(object)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} (#{@color.p(@target.inspect.object_id, :red)}) " \
-        "to not be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
+                        "to not be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
 
       assert(!@target.equal?(object), failure_message)
     end
@@ -363,7 +364,7 @@ module Guava
       difference = (@target - value).abs
 
       failure_message = "Expected |#{@target} - #{value}| " \
-        "(#{@color.p(difference, :red)}) to be <= #{@color.p(delta, :green)}."
+                        "(#{@color.p(difference, :red)}) to be <= #{@color.p(delta, :green)}."
 
       assert(delta >= difference, failure_message)
     end
@@ -383,7 +384,7 @@ module Guava
       difference = (@target - value).abs
 
       failure_message = "Expected |#{@target} - #{value}| " \
-        "(#{@color.p(difference, :red)}) to not be <= #{@color.p(delta, :green)}."
+                        "(#{@color.p(difference, :red)}) to not be <= #{@color.p(delta, :green)}."
 
       assert(delta <= difference, failure_message)
     end
@@ -446,7 +447,7 @@ module Guava
       return to_be(operator) unless other
 
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to be #{operator}" \
-        " #{@color.p(other, :green)}."
+                        " #{@color.p(other, :green)}."
 
       assert(@target.public_send(operator, other), failure_message)
     end
@@ -467,7 +468,7 @@ module Guava
       return to_not_be(operator) unless other
 
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to not be #{operator}" \
-        " #{@color.p(other, :green)}."
+                        " #{@color.p(other, :green)}."
 
       assert(!@target.public_send(operator, other), failure_message)
     end
@@ -488,7 +489,8 @@ module Guava
         @file,
         @name,
         @line_number,
-        failure_message
+        failure_message,
+        @klass
       )
 
       raise ExpectationFailed
