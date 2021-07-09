@@ -51,10 +51,11 @@ module Guava
       @success_count += 1
     end
 
+    # @param test [Guava::Test]
     # @return [void]
-    def increment_failure_count(file_name, test_name, line_number, message, klass)
+    def increment_failure_count(test, message)
       print(@color.p("F", :red))
-      @failures << Failure.new(file_name, test_name, message, line_number, klass, @color)
+      @failures << Failure.new(test, message)
       @failure_count += 1
     end
 

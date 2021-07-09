@@ -21,20 +21,16 @@ module Guava
     # @return [Class]
     attr_reader :klass
 
-    # @param file_name [String]
-    # @param test_name [String]
+    # @param test [Guava::Test]
     # @param message [String]
-    # @param line_number [Integer]
-    # @param klass [Class]
-    # @param color [Guava::Color]
     # @return [Guava::Failure]
-    def initialize(file_name, test_name, message, line_number, klass, color) # rubocop:disable Metrics/ParameterLists
-      @file_name = file_name
-      @test_name = test_name
+    def initialize(test, message)
+      @file_name = test.file
+      @test_name = test.name
+      @line_number = test.line_number
+      @klass = test.class
+      @color = test.color
       @message = message
-      @line_number = line_number
-      @klass = klass
-      @color = color
     end
 
     # @return [String]

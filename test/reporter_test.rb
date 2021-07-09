@@ -3,6 +3,11 @@
 require "test_helper"
 
 class ReporterTest < Minitest::Test
+  def setup
+    @reporter = Guava::Reporter.new
+    @test = MyTest.new(Guava::Reporter.new, :test_example)
+  end
+
   def test_increment_test_count
     reporter = Guava::Reporter.new
 
@@ -29,11 +34,7 @@ class ReporterTest < Minitest::Test
     reporter = Guava::Reporter.new
     reporter.expects(:print).with("F")
 
-    assert_equal(
-      1,
-      reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.", MyTest)
-    )
-
+    assert_equal 1, reporter.increment_failure_count(@test, "Expected false to be truthy.")
     assert_equal 1, reporter.instance_variable_get(:@failures).length
   end
 
@@ -55,7 +56,7 @@ class ReporterTest < Minitest::Test
     reporter.expects(:print).with("F")
 
     assert_equal 0, reporter.exit_status
-    reporter.increment_failure_count("test/my_test.rb", "my_test", 32, "Expected false to be truthy.", MyTest)
+    reporter.increment_failure_count(@test, "Expected false to be truthy.")
     assert_equal 1, reporter.exit_status
   end
 end

@@ -23,12 +23,8 @@ module Guava
     # @return [Guava::Expectation]
     def initialize(target, test)
       @target = target
-      @reporter = test.reporter
       @color = test.color
-      @file = test.file
-      @name = test.name
-      @line_number = test.line_number
-      @klass = test.class
+      @test = test
     end
 
     # expect(target).to_be_truthy
@@ -482,17 +478,10 @@ module Guava
     # @param failure_message [String]
     # @return [Guava::Expectation]
     def assert(value, failure_message)
-      @reporter.increment_expectation_count
+      @test.reporter.increment_expectation_count
       return self if value
 
-      @reporter.increment_failure_count(
-        @file,
-        @name,
-        @line_number,
-        failure_message,
-        @klass
-      )
-
+      @test.reporter.increment_failure_count(@test, failure_message)
       raise ExpectationFailed
     end
   end
