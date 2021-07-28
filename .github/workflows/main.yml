@@ -12,6 +12,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor/bundle
+          key: 3.0.2
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
