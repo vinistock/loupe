@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # Color
   #
   # This class is responsible for coloring

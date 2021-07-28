@@ -4,6 +4,6 @@
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
 $LOAD_PATH.unshift(File.expand_path("../test", __dir__))
 
-require "guava"
+require "loupe"
 
-Guava::Cli.new
+Loupe::Cli.new

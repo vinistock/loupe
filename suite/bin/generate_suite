@@ -8,15 +8,15 @@ include FileUtils # rubocop:disable Style/MixinUsage
 framework = ARGV.first
 
 unless framework
-  puts "Specify a framework to generate fake tests (guava/minitest/parallel)"
+  puts "Specify a framework to generate fake tests (loupe/minitest/parallel)"
   return
 end
 
 FileUtils.rm(Dir["test/fake/#{framework}/**/*.rb"])
 
 parent_class = case framework
-               when "guava"
-                 "Guava::Test"
+               when "loupe"
+                 "Loupe::Test"
                when "minitest"
                  "Minitest::Test"
                else
@@ -25,7 +25,7 @@ parent_class = case framework
 
 def body(framework, test_number) # rubocop:disable Metrics/MethodLength
   case framework
-  when "guava"
+  when "loupe"
     <<~BODY
       def before
         @number = #{test_number}
@@ -66,7 +66,7 @@ def body(framework, test_number) # rubocop:disable Metrics/MethodLength
   end
 end
 
-require_line = if framework == "guava"
+require_line = if framework == "loupe"
                  ""
                else
                  "require_relative \"../../#{framework}_test_helper\""

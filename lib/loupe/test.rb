@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # Test
   #
   # The parent class for tests. Tests should
   # inherit from this class in order to be run.
   class Test
-    # @return [Guava::Reporter]
+    # @return [Loupe::Reporter]
     attr_reader :reporter
 
     # @return [Integer]
@@ -15,7 +15,7 @@ module Guava
     # @return [String]
     attr_reader :file
 
-    # @return [Guava::Color]
+    # @return [Loupe::Color]
     attr_reader :color
 
     # @return [String]
@@ -49,19 +49,19 @@ module Guava
     #
     # @param method_name [Symbol]
     # @param options [Hash<Symbol, BasicObject>]
-    # @return [Guava::Reporter]
+    # @return [Loupe::Reporter]
     def self.run(method_name, options = {})
       reporter = options[:interactive] ? PagedReporter.new(options) : PlainReporter.new(options)
       new(reporter, method_name, options).run
       reporter
-    rescue Guava::Expectation::ExpectationFailed
+    rescue Expectation::ExpectationFailed
       reporter
     end
 
-    # @param reporter [Guava::Reporter]
+    # @param reporter [Loupe::Reporter]
     # @param method_name [Symbol]
     # @param options [Hash<Symbol, BasicObject>]
-    # @return [Guava::Test]
+    # @return [Loupe::Test]
     def initialize(reporter, method_name, options = {})
       @reporter = reporter
       @color = Color.new(options[:color])
@@ -101,7 +101,7 @@ module Guava
     #     .to_include(object)
     #     .be_an_instance_of(Array)
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def expect(target)
       Expectation.new(target, self)
     end

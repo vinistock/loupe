@@ -2,7 +2,7 @@
 
 require "etc"
 
-module Guava
+module Loupe
   # Executor
   #
   # This class is responsible for the execution flow. It populates
@@ -11,7 +11,7 @@ module Guava
   # until the queue is empty.
   class Executor
     # @param options [Hash<Symbol, BasicObject>]
-    # @return [Guava::Executor]
+    # @return [Loupe::Executor]
     def initialize(options)
       @queue = populate_queue
       @reporter = options[:interactive] ? PagedReporter.new(options) : PlainReporter.new(options)

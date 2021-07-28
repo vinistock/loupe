@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # Failure
   #
   # This class represents a single test failure. It corresponds
@@ -21,9 +21,9 @@ module Guava
     # @return [Class]
     attr_reader :klass
 
-    # @param test [Guava::Test]
+    # @param test [Loupe::Test]
     # @param message [String]
-    # @return [Guava::Failure]
+    # @return [Loupe::Failure]
     def initialize(test, message)
       @file_name = test.file
       @test_name = test.name

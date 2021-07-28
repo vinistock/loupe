@@ -4,17 +4,17 @@ require "test_helper"
 
 class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   def setup
-    @test = MyTest.new(Guava::Reporter.new, :test_example)
+    @test = MyTest.new(Loupe::Reporter.new, :test_example)
   end
 
   def test_failed_expectation
-    expect = Guava::Expectation.new(false, @test)
+    expect = Loupe::Expectation.new(false, @test)
     @test
       .reporter
       .expects(:increment_failure_count)
       .with(@test, "Expected false to be truthy.")
 
-    assert_raises(Guava::Expectation::ExpectationFailed) do
+    assert_raises(Loupe::Expectation::ExpectationFailed) do
       expect.to_be_truthy
     end
   end
@@ -92,7 +92,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_to_match
-    expect = Guava::Expectation.new(/abc/, @test)
+    expect = Loupe::Expectation.new(/abc/, @test)
     expect.expects(:assert).with do |value, message|
       value && %r{Expected .*/abc/.* to respond to =~\.}.match?(message)
     end
@@ -104,7 +104,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_to_match_using_string
-    expect = Guava::Expectation.new("abc", @test)
+    expect = Loupe::Expectation.new("abc", @test)
     expect.expects(:assert).with do |value, message|
       value && /Expected .*abc.* to respond to =~\./.match?(message)
     end
@@ -116,7 +116,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_to_not_match
-    expect = Guava::Expectation.new(/xyz/, @test)
+    expect = Loupe::Expectation.new(/xyz/, @test)
     expect.expects(:assert).with do |value, message|
       value && %r{Expected .*/xyz/.* to respond to =~\.}.match?(message)
     end
@@ -128,7 +128,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_to_not_match_using_string
-    expect = Guava::Expectation.new("xyz", @test)
+    expect = Loupe::Expectation.new("xyz", @test)
     expect.expects(:assert).with do |value, message|
       value && /Expected .*xyz.* to respond to =~\./.match?(message)
     end
@@ -217,7 +217,7 @@ class ExpectationTest < Minitest::Test # rubocop:disable Metrics/ClassLength
   private
 
   def expect_with(target, regex)
-    expect = Guava::Expectation.new(target, @test)
+    expect = Loupe::Expectation.new(target, @test)
     expect.expects(:assert).with do |value, message|
       value && regex.match?(message)
     end

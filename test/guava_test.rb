@@ -2,5 +2,5 @@
 
 require "test_helper"
 
-class GuavaTest < Minitest::Test
+class LoupeTest < Minitest::Test
 end

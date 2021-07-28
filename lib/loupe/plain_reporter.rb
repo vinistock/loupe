@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # PlainReporter
   #
   # A simple reporter that just prints dots and Fs to

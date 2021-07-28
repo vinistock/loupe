@@ -2,7 +2,7 @@
 
 require "io/console"
 
-module Guava
+module Loupe
   # Pager
   #
   # This class is responsible for paginating the test failures,

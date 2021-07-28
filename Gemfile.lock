@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    guava (0.1.0)
+    loupe (0.1.0)
       io-console
 
 GEM
@@ -94,7 +94,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   byebug
-  guava!
+  loupe!
   minitest
   mocha
   purdytest
@@ -108,4 +108,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.23
+   2.2.24

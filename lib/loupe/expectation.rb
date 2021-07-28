@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # Expectation
   #
   # This class is responsible for instantiating a target
@@ -14,13 +14,13 @@ module Guava
   # in such a way that they read in plain English.
   # E.g.: expect(something).to_be_truthy
   #
-  # @see Guava::Test#expect
+  # @see Loupe::Test#expect
   class Expectation # rubocop:disable Metrics/ClassLength
     class ExpectationFailed < StandardError; end
 
     # @param target [BasicObject]
-    # @param test [Guava::Test]
-    # @return [Guava::Expectation]
+    # @param test [Loupe::Test]
+    # @return [Loupe::Expectation]
     def initialize(target, test)
       @target = target
       @color = test.color
@@ -31,7 +31,7 @@ module Guava
     #
     # Expects `target` to be a truthy value (not `nil` or `false`).
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_truthy
       assert(@target, "Expected #{@color.p(@target.inspect, :red)} to be #{@color.p('truthy', :green)}.")
     end
@@ -40,7 +40,7 @@ module Guava
     #
     # Expects `target` to be a falsey value (`nil` or `false`).
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_falsey
       assert(!@target, "Expected #{@color.p(@target.inspect, :red)} to be #{@color.p('falsey', :green)}.")
     end
@@ -51,7 +51,7 @@ module Guava
     # but not if the objects are the exact same instance. For comparing identity, use {#to_be_the_same_as}.
     #
     # @param value [#==]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_equal_to(value)
       assert(@target == value, "Expected #{@color.p(@target.inspect, :red)} to be equal to #{@color.p(value, :green)}.")
     end
@@ -62,7 +62,7 @@ module Guava
     # but not if the objects are the different instances. For comparing identity, use {#to_not_be_the_same_as}.
     #
     # @param value [#!=]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_equal_to(value)
       assert(@target != value,
              "Expected #{@color.p(@target.inspect, :red)} to not be equal to #{@color.p(value, :green)}.")
@@ -72,7 +72,7 @@ module Guava
     #
     # Expects `target` to be empty. Which means invoking `empty?` must return `true`.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_empty
       assert(@target.empty?, "Expected #{@color.p(@target.inspect, :red)} to be empty.")
     end
@@ -81,7 +81,7 @@ module Guava
     #
     # Expects `target` to not be empty. Which means invoking `empty?` must return `false`.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_empty
       assert(!@target.empty?, "Expected #{@color.p(@target.inspect, :red)} to not be empty.")
     end
@@ -91,7 +91,7 @@ module Guava
     # Expects `target` to respond to `method`. This expectation passes if `method` exists in `target`.
     #
     # @param method [String, Symbol]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_respond_to(method)
       assert(
         @target.respond_to?(method.to_sym),
@@ -104,7 +104,7 @@ module Guava
     # Expects `target` to not respond to `method`. This expectation passes if `method` does not exist in `target`.
     #
     # @param method [String, Symbol]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_respond_to(method)
       assert(
         !@target.respond_to?(method.to_sym),
@@ -118,7 +118,7 @@ module Guava
     # or another object that responds to `include?`. The expectation passes if `target` includes `object`.
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_include(object)
       assert(
         @target.include?(object),
@@ -132,7 +132,7 @@ module Guava
     # or another object that responds to `include?`. The expectation passes if `target` does not include `object`.
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_include(object)
       assert(
         !@target.include?(object),
@@ -144,7 +144,7 @@ module Guava
     #
     # Expects `target` to be `nil`.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_nil
       assert(@target.nil?, "Expected #{@color.p(@target.inspect, :red)} to be nil.")
     end
@@ -153,7 +153,7 @@ module Guava
     #
     # Expects `target` not to be `nil`.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_nil
       assert(!@target.nil?, "Expected #{@color.p(@target.inspect, :red)} to not be nil.")
     end
@@ -164,7 +164,7 @@ module Guava
     # an instance of `String` and will pass the expectation.
     #
     # @param klass [Class]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_an_instance_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to be an instance " \
                         "of #{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
@@ -178,7 +178,7 @@ module Guava
     # not an instance of `Integer` and will not pass the expectation.
     #
     # @param klass [Class]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_an_instance_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to not be an instance of " \
                         "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
@@ -192,7 +192,7 @@ module Guava
     # the expectation will pass.
     #
     # @param klass [Class]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_a_kind_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to be a kind of " \
                         "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
@@ -206,7 +206,7 @@ module Guava
     # the expectation will pass.
     #
     # @param klass [Class]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_a_kind_of(klass)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} to not be a kind of " \
                         "#{@color.p(klass, :green)}, not #{@color.p(@target.inspect.class, :red)}."
@@ -227,7 +227,7 @@ module Guava
     #   expect(calculation_result).to_be(:odd?)
     #
     # @param predicate [String, Symbol]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be(predicate)
       assert(
         @target.public_send(predicate),
@@ -248,7 +248,7 @@ module Guava
     #   expect(calculation_result).to_not_be(:zero?)
     #
     # @param predicate [String, Symbol]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be(predicate)
       assert(
         !@target.public_send(predicate),
@@ -267,7 +267,7 @@ module Guava
     #   expect("awesome").to_match("ruby is awesome")
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_match(object)
       to_respond_to(:=~)
 
@@ -286,7 +286,7 @@ module Guava
     #   expect("terrible").to_not_match("ruby is awesome")
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_match(object)
       to_respond_to(:=~)
 
@@ -300,7 +300,7 @@ module Guava
     # object, with the same `object_id`.
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_the_same_as(object)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} (#{@color.p(@target.inspect.object_id, :red)}) " \
                         "to be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
@@ -317,7 +317,7 @@ module Guava
     # different, this expectation will pass.
     #
     # @param object [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_the_same_as(object)
       failure_message = "Expected #{@color.p(@target.inspect, :red)} (#{@color.p(@target.inspect.object_id, :red)}) " \
                         "to not be the same as #{@color.p(object, :green)} (#{@color.p(object.object_id, :green)})."
@@ -330,7 +330,7 @@ module Guava
     # Expects `target` to be an existing path in the file system. That means, invoking `File.exist?(target)`
     # must return `true` for this expectation to pass.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_an_existing_path
       assert(File.exist?(@target), "Expected path '#{@color.p(@target.inspect, :red)}' to exist.")
     end
@@ -340,7 +340,7 @@ module Guava
     # Expects `target` to not be an existing path in the file system. That means, invoking `File.exist?(target)`
     # must return `false` for this expectation to pass.
     #
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_an_existing_path
       assert(!File.exist?(@target), "Expected path '#{@color.p(@target.inspect, :red)}' to not exist.")
     end
@@ -355,7 +355,7 @@ module Guava
     #
     # @param value [Numeric]
     # @param delta [Numeric]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_in_delta_of(value, delta = 0.001)
       difference = (@target - value).abs
 
@@ -375,7 +375,7 @@ module Guava
     #
     # @param value [Numeric]
     # @param delta [Numeric]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_in_delta_of(value, delta = 0.001)
       difference = (@target - value).abs
 
@@ -401,7 +401,7 @@ module Guava
     #
     # @param value [Numeric]
     # @param epsilon [Numeric]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_be_in_epsilon_of(value, epsilon = 0.001)
       to_be_in_delta_of(value, [@target.abs, value.abs].min * epsilon)
     end
@@ -422,7 +422,7 @@ module Guava
     #
     # @param value [Numeric]
     # @param epsilon [Numeric]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_be_in_epsilon_of(value, epsilon = 0.001)
       to_not_be_in_delta_of(value, [@target.abs, value.abs].min * epsilon)
     end
@@ -438,7 +438,7 @@ module Guava
     #
     # @param operator [Symbol]
     # @param other [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_satisfy_operator(operator, other)
       return to_be(operator) unless other
 
@@ -459,7 +459,7 @@ module Guava
     #
     # @param operator [Symbol]
     # @param other [BasicObject]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def to_not_satisfy_operator(operator, other)
       return to_not_be(operator) unless other
 
@@ -476,7 +476,7 @@ module Guava
     #
     # @param value [BasicObject]
     # @param failure_message [String]
-    # @return [Guava::Expectation]
+    # @return [Loupe::Expectation]
     def assert(value, failure_message)
       @test.reporter.increment_expectation_count
       return self if value

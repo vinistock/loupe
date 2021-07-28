@@ -3,16 +3,18 @@
 The fake test suite is used to compare results between different configurations.
 
 To generate the suite:
+
 ```bash
-# framework can be minitest/parallel/guava
+# framework can be minitest/parallel/loupe
 
 bin/generate_suite [framework]
 ```
 
 To run the suite:
+
 ```bash
-# Guava
-../exe/guava test/fake/guava/**/*rb
+# Loupe
+../exe/loupe test/fake/loupe/**/*rb
 
 # Minitest
 ruby -Ilib -e 'ARGV.each { |f| require f }' ./test/fake/minitest/*.rb

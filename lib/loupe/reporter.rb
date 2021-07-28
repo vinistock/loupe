@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Guava
+module Loupe
   # Reporter
   #
   # Class that handles reporting test results
@@ -18,11 +18,11 @@ module Guava
     # @return [Integer]
     attr_reader :failure_count
 
-    # @return [Array<Guava::Failure>]
+    # @return [Array<Loupe::Failure>]
     attr_reader :failures
 
     # @param options [Hash<Symbol, BasicObject>]
-    # @return [Guava::Reporter]
+    # @return [Loupe::Reporter]
     def initialize(options = {})
       @options = options
       @color = Color.new(options[:color])
@@ -51,7 +51,7 @@ module Guava
       @success_count += 1
     end
 
-    # @param test [Guava::Test]
+    # @param test [Loupe::Test]
     # @return [void]
     def increment_failure_count(test, message)
       print(@color.p("F", :red))
@@ -59,8 +59,8 @@ module Guava
       @failure_count += 1
     end
 
-    # @param other [Guava::Reporter]
-    # @return [Guava::Reporter]
+    # @param other [Loupe::Reporter]
+    # @return [Loupe::Reporter]
     def +(other)
       @test_count += other.test_count
       @expectation_count += other.expectation_count

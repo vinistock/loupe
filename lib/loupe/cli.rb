@@ -2,7 +2,7 @@
 
 require "optparse"
 
-module Guava
+module Loupe
   # Cli
   #
   # The Cli class defines all available
@@ -23,8 +23,8 @@ module Guava
       OptionParser.new do |opts|
         opts.banner = USAGE
 
-        opts.on("--version", "Print Guava's version") do
-          warn Guava::VERSION
+        opts.on("--version", "Print Loupe's version") do
+          warn Loupe::VERSION
           exit(0)
         end
 
@@ -72,7 +72,7 @@ module Guava
         @files.each do |f|
           file, line_number = f.split(":")
           require File.expand_path(file)
-          Guava::Test.add_line_number(line_number) if line_number
+          Test.add_line_number(line_number) if line_number
         end
       end
     end

@@ -4,26 +4,26 @@ require "test_helper"
 
 class ReporterTest < Minitest::Test
   def setup
-    @reporter = Guava::Reporter.new
-    @test = MyTest.new(Guava::Reporter.new, :test_example)
+    @reporter = Loupe::Reporter.new
+    @test = MyTest.new(Loupe::Reporter.new, :test_example)
   end
 
   def test_increment_test_count
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@test_count)
     assert_equal 1, reporter.increment_test_count
   end
 
   def test_increment_expectation_count
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
 
     assert_equal 0, reporter.instance_variable_get(:@expectation_count)
     assert_equal 1, reporter.increment_expectation_count
   end
 
   def test_increment_success_count
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
     reporter.expects(:print).with(".")
 
     assert_equal 0, reporter.instance_variable_get(:@success_count)
@@ -31,7 +31,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_increment_failure_count
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
     reporter.expects(:print).with("F")
 
     assert_equal 1, reporter.increment_failure_count(@test, "Expected false to be truthy.")
@@ -39,9 +39,9 @@ class ReporterTest < Minitest::Test
   end
 
   def test_addition_operator
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
     reporter.expects(:print).with(".")
-    second_reporter = Guava::Reporter.new
+    second_reporter = Loupe::Reporter.new
 
     reporter.increment_success_count
     second_reporter.increment_expectation_count
@@ -52,7 +52,7 @@ class ReporterTest < Minitest::Test
   end
 
   def test_exit_status
-    reporter = Guava::Reporter.new
+    reporter = Loupe::Reporter.new
     reporter.expects(:print).with("F")
 
     assert_equal 0, reporter.exit_status

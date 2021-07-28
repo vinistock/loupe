@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in guava.gemspec
+# Specify your gem's dependencies in loupe.gemspec
 gemspec
 
 gem "activesupport", require: false
