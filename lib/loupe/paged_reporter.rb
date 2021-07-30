@@ -33,7 +33,7 @@ module Loupe
         header
 
         if @failures.empty?
-          puts "All failures marked as fixed"
+          puts "All tests passed"
           break
         end
 

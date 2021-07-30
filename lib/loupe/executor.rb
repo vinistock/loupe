@@ -15,7 +15,7 @@ module Loupe
     def initialize(options)
       @queue = populate_queue
       @reporter = options[:interactive] ? PagedReporter.new(options) : PlainReporter.new(options)
-      @workers = (0...Etc.nprocessors).map do
+      @workers = (0...[Etc.nprocessors, @queue.length].min).map do
         Ractor.new(options) do |opts|
           loop do
             klass, method_name = Ractor.receive
@@ -35,7 +35,10 @@ module Loupe
     #
     # @return [Integer]
     def run
-      @workers.each { |r| r.send(@queue.pop) }
+      @workers.each do |r|
+        item = @queue.pop
+        r.send(item) unless item.nil?
+      end
 
       until @queue.empty?
         idle_worker, tmp_reporter = Ractor.select(*@workers)
