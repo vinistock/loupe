@@ -64,7 +64,7 @@ module Loupe
     def require_tests
       require "#{Dir.pwd}/test/test_helper"
 
-      if @files.nil?
+      if @files.empty?
         Dir["#{Dir.pwd}/test/**/*_test.rb"]
           .tap(&:shuffle!)
           .each { |f| require f }
