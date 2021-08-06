@@ -70,7 +70,7 @@ module Loupe
           end
         end
 
-        list.map! { |method| [klass, method] }
+        list.map! { |method| [klass, method] }.shuffle!
       end
     end
   end

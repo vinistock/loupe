@@ -65,9 +65,7 @@ module Loupe
       require "#{Dir.pwd}/test/test_helper"
 
       if @files.empty?
-        Dir["#{Dir.pwd}/test/**/*_test.rb"]
-          .tap(&:shuffle!)
-          .each { |f| require f }
+        Dir["#{Dir.pwd}/test/**/*_test.rb"].each { |f| require f }
       else
         @files.each do |f|
           file, line_number = f.split(":")
