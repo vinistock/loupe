@@ -220,9 +220,5 @@ module Loupe
       $stdout = stdout
       $stderr = stderr
     end
-
-    # Missing assertions (+ refutes)
-    # :assert_raises, :assert_send
-    # :assert_throws, :assert_mock
   end
 end

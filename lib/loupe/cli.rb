@@ -14,12 +14,24 @@ module Loupe
     TEXT
 
     # @return [void]
-    def initialize # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def initialize
       @options = {
         color: true,
         interactive: true
       }
 
+      parse_options(@options)
+      @options.freeze
+
+      @files = ARGV
+      start
+    end
+
+    private
+
+    # @param options [Hash<Symbol, BasicObject>]
+    # @return [void]
+    def parse_options(options)
       OptionParser.new do |opts|
         opts.banner = USAGE
 
@@ -28,31 +40,15 @@ module Loupe
           exit(0)
         end
 
-        opts.on("--color", "--[no-]color", "Enable or disable color in the output") do |value|
-          @options[:color] = value
-        end
+        opts.on("--color", "--[no-]color", "Enable or disable color in the output") { |value| options[:color] = value }
+        opts.on("--interactive", "Use interactive output") { options[:interactive] = true }
+        opts.on("--plain", "Use plain non-interactive output") { options[:interactive] = false }
 
-        opts.on("--interactive", "Use interactive output") do
-          @options[:interactive] = true
-        end
-
-        opts.on("--plain", "Use plain non-interactive output") do
-          @options[:interactive] = false
-        end
-
-        opts.on("--editor=EDITOR", "Select the editor to open test files with in interactive mode") do |value|
-          raise ArgumentError, "--editor can only be select in interative mode" unless @options[:interactive]
-
-          @options[:editor] = value
+        opts.on("--editor=EDITOR", "The editor to open test files with in interactive mode") do |value|
+          options[:editor] = value
         end
       end.parse!
-      @options.freeze
-
-      @files = ARGV
-      start
     end
-
-    private
 
     # @return [void]
     def start
