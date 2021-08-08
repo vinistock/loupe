@@ -49,6 +49,7 @@ module Loupe
           open_editor
         when "f"
           @failures.delete_at(@current_page)
+          @current_page -= 1 unless @current_page.zero?
         when "r"
           rerun_failure
         when "q"
