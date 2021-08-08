@@ -5,13 +5,16 @@ require:
   - rubocop-rake
 
 AllCops:
+  TargetRubyVersion: 2.7
   NewCops: enable
   Exclude:
-  - vendor/bundle/**/*
-  - suite/test/fake/**/*
+    - vendor/bundle/**/*
+    - suite/test/fake/**/*
 Layout/LineLength:
   Max: 120
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 Metrics/MethodLength:
   Max: 25
+Lint/NonDeterministicRequireOrder:
+  Enabled: false

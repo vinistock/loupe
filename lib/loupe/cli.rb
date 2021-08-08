@@ -17,7 +17,8 @@ module Loupe
     def initialize
       @options = {
         color: true,
-        interactive: true
+        interactive: true,
+        mode: :ractor
       }
 
       parse_options(@options)
@@ -31,7 +32,7 @@ module Loupe
 
     # @param options [Hash<Symbol, BasicObject>]
     # @return [void]
-    def parse_options(options)
+    def parse_options(options) # rubocop:disable Metrics/AbcSize
       OptionParser.new do |opts|
         opts.banner = USAGE
 
@@ -43,6 +44,12 @@ module Loupe
         opts.on("--color", "--[no-]color", "Enable or disable color in the output") { |value| options[:color] = value }
         opts.on("--interactive", "Use interactive output") { options[:interactive] = true }
         opts.on("--plain", "Use plain non-interactive output") { options[:interactive] = false }
+        opts.on("--process", "Execute in process mode") { @options[:mode] = :process }
+        opts.on("--ractor", "Execute in ractor mode") do
+          raise ArgumentError, "Ractor mode can only be used in Ruby 3.0 and forward" if RUBY_VERSION < "3.0.0"
+
+          @options[:mode] = :ractor
+        end
 
         opts.on("--editor=EDITOR", "The editor to open test files with in interactive mode") do |value|
           options[:editor] = value
@@ -53,7 +60,8 @@ module Loupe
     # @return [void]
     def start
       require_tests
-      exit(Executor.new(@options).run)
+      executor = @options[:mode] == :ractor ? RactorExecutor.new(@options) : ProcessExecutor.new(@options)
+      exit(executor.run)
     end
 
     # @return [void]

@@ -1,6 +1,6 @@
 # Loupe
 
-[Loupe](https://en.wikipedia.org/wiki/Loupe) is a test framework built with Ractors for parallel execution.
+[Loupe](https://en.wikipedia.org/wiki/Loupe) is a test framework with built in parallel execution supporting Ractor or forked process modes.
 
 ## Installation
 
@@ -53,6 +53,17 @@ To run the test suite, invoke the executable. If a binstub was generated, prefer
 ```shell
 bundle exec loupe
 bin/loupe test/post_test.rb test/author_test.rb
+```
+
+Tests can run in parallel using Ractor or process mode. When using Ractors, the application's code must be Ractor compatible.
+
+```shell
+bin/loupe --ractor            # [default] run tests using Ractor workers
+bin/loupe --process           # run tests using forked processes
+bin/loupe --interactive       # [default] use an interactive reporter to display test results
+bin/loupe --plain             # use a plain reporter to display test results
+bin/loupe --color, --no-color # enable/disable output colors
+bin/loupe --editor=EDITOR     # which editor to use for opening files when using interactive mode. The default is the environment variable $EDITOR
 ```
 
 ## Credits
