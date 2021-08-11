@@ -12,13 +12,7 @@ module Loupe
     def print_summary
       @current_page = 0
       @console = IO.console
-      @summary = <<~SUMMARY
-        Tests: #{@test_count} Expectations: #{@expectation_count}
-        Passed: #{@success_count} Failures: #{@failure_count}
-
-        Finished in #{Time.now - @start_time} seconds
-      SUMMARY
-
+      @runtime = Time.now - @start_time
       page
     end
 
@@ -28,12 +22,12 @@ module Loupe
     # Allow users to navigate through pages of test failures
     # and interact with them.
     # @return [void]
-    def page # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
+    def page # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength
       loop do
         header
 
         if @failures.empty?
-          puts "All tests passed"
+          puts "All tests fixed"
           break
         end
 
@@ -49,6 +43,8 @@ module Loupe
           open_editor
         when "f"
           @failures.delete_at(@current_page)
+          @failure_count -= 1
+          @success_count += 1
           @current_page -= 1 unless @current_page.zero?
         when "r"
           rerun_failure
@@ -58,6 +54,16 @@ module Loupe
       end
     end
 
+    # return [String]
+    def summary
+      <<~SUMMARY
+        Tests: #{@test_count} Expectations: #{@expectation_count}
+        Passed: #{@success_count} Failures: #{@failure_count}
+
+        Finished in #{@runtime} seconds
+      SUMMARY
+    end
+
     # Prints a bar at the top with the summary of the test run
     # including totals failures and expectations
     # @return [void]
@@ -65,7 +71,7 @@ module Loupe
       @console.erase_screen(1)
       @console.cursor = [0, 0]
       bar = "=" * @console.winsize[1]
-      puts "#{bar}\n#{@summary}\n#{bar}\n"
+      puts "#{bar}\n#{summary}\n#{bar}\n"
     end
 
     # Print the preview of the file where a failure occurred
