@@ -53,7 +53,10 @@ module Loupe
     # @param value [#==]
     # @return [Loupe::Expectation]
     def to_be_equal_to(value)
-      assert(@target == value, "Expected #{@color.p(@target.inspect, :red)} to be equal to #{@color.p(value, :green)}.")
+      assert(
+        @target == value,
+        "Expected #{@color.p(@target.inspect, :red)} to be equal to #{@color.p(value.inspect, :green)}."
+      )
     end
 
     # expect(target).to_not_be_equal_to(value)
@@ -64,8 +67,10 @@ module Loupe
     # @param value [#!=]
     # @return [Loupe::Expectation]
     def to_not_be_equal_to(value)
-      assert(@target != value,
-             "Expected #{@color.p(@target.inspect, :red)} to not be equal to #{@color.p(value, :green)}.")
+      assert(
+        @target != value,
+        "Expected #{@color.p(@target.inspect, :red)} to not be equal to #{@color.p(value.inspect, :green)}."
+      )
     end
 
     # expect(target).to_be_empty
