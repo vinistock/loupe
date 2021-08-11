@@ -26,15 +26,14 @@ module Loupe
 
           until server.empty?
             klass, method_name = server.pop
-            server.add_reporter(klass.run(method_name, @options))
+            server.add_reporter(klass.run(method_name, @options)) if klass && method_name
           end
         end
       end
 
+      shutdown
       @reporter.print_summary
       @reporter.exit_status
-    ensure
-      shutdown
     end
 
     private
