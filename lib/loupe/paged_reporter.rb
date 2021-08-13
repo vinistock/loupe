@@ -7,12 +7,13 @@ module Loupe
   #
   # This class is responsible for paginating the test failures,
   # and implementing an interface for interacting with them.
-  class PagedReporter < Reporter
+  class PagedReporter < Reporter # rubocop:disable Metrics/ClassLength
     # @return [void]
     def print_summary
       @current_page = 0
       @console = IO.console
       @runtime = Time.now - @start_time
+      @running = true
       page
     end
 
@@ -22,35 +23,43 @@ module Loupe
     # Allow users to navigate through pages of test failures
     # and interact with them.
     # @return [void]
-    def page # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/MethodLength
-      loop do
+    def page
+      while @running
+        @current_failure = @failures[@current_page]
+        @mid_width = @console.winsize[1] / 2
         header
 
         if @failures.empty?
           puts "All tests fixed"
-          break
+          @running = false
+        else
+          file_preview
+          menu
+          handle_raw_command
         end
+      end
+    end
 
-        file_preview
-        footer
-
-        case @console.raw { |c| c.read(1) }
-        when "j"
-          @current_page += 1 unless @current_page == @failures.length - 1
-        when "k"
-          @current_page -= 1 unless @current_page.zero?
-        when "o"
-          open_editor
-        when "f"
-          @failures.delete_at(@current_page)
-          @failure_count -= 1
-          @success_count += 1
-          @current_page -= 1 unless @current_page.zero?
-        when "r"
-          rerun_failure
-        when "q"
-          break
-        end
+    # Read a raw command from the console and match it
+    #
+    # @return [void]
+    def handle_raw_command # rubocop:disable Metrics/CyclomaticComplexity
+      case @console.raw { |c| c.read(1) }
+      when "j"
+        @current_page += 1 unless @current_page == @failures.length - 1
+      when "k"
+        @current_page -= 1 unless @current_page.zero?
+      when "o"
+        open_editor
+      when "f"
+        @failures.delete_at(@current_page)
+        @failure_count -= 1
+        @success_count += 1
+        @current_page -= 1 unless @current_page.zero?
+      when "r"
+        rerun_failure
+      when "q"
+        @running = false
       end
     end
 
@@ -71,7 +80,7 @@ module Loupe
     # including totals failures and expectations
     # @return [void]
     def header
-      @console.erase_screen(1)
+      @console.erase_screen(2)
       @console.cursor = [0, 0]
       bar = "=" * @console.winsize[1]
       puts "#{bar}\n#{summary}\n#{bar}\n"
@@ -81,13 +90,17 @@ module Loupe
     # add a line indicating where exactly it broke
     # @return [void]
     def file_preview
-      failure = @failures[@current_page]
-      lines = File.readlines(failure.file_name)
+      lines = File.readlines(@current_failure.file_name)
 
-      lines.insert(failure.line_number + 1,
-                   "#{indentation_on_failure_line(lines)}^^^ #{failure.message.gsub(/(\[\d;\d{2}m|\[0m)/, '')}")
-      content = lines[failure.line_number - 5..failure.line_number + 5].join('\n')
-      system("echo '#{content}' | bat --force-colorization --language=rb --paging=never")
+      lines.insert(
+        @current_failure.line_number + 1,
+        "#{indentation_on_failure_line(lines)}^^^ #{@current_failure.message.gsub(/(\[\d;\d{2}m|\[0m)/, '')}"
+      )
+      content = lines[@current_failure.line_number - 5..@current_failure.line_number + 5].join('\n')
+
+      system("echo '#{content}' | " \
+             " bat --force-colorization --language=rb" \
+             " --paging=never --terminal-width=#{@mid_width - 1} --wrap character")
     end
 
     # The indentation on the line where the failure happened
@@ -95,18 +108,40 @@ module Loupe
     # @param lines [Array<String>]
     # return [String]
     def indentation_on_failure_line(lines)
-      " " * (lines[@failures[@current_page].line_number].chars.index { |c| c != " " })
+      " " * (lines[@current_failure.line_number].chars.index { |c| c != " " })
     end
 
-    # Print the failure message and usage instructions at the bottom
     # @return [void]
-    def footer
-      @console.cursor_down(5)
-      puts @status
-      puts @failures[@current_page]
-      @console.cursor_down(2)
-      puts "j (next) / k (previous) / o (open in editor) / f (mark as fixed) / r (rerun test) / q (quit)"
+    def menu
+      location, message = @current_failure.location_and_message
+
+      print_on_right_side(7, @status)
+      print_on_right_side(9, location)
+      print_on_right_side(10, message)
+
+      print_on_right_side(12, "Commands")
+      print_on_right_side(14, "j (next)")
+      print_on_right_side(15, "k (previous)")
+      print_on_right_side(16, "o (open in editor)")
+      print_on_right_side(17, "f (mark as fixed)")
+      print_on_right_side(18, "r (rerun selected test)")
+      print_on_right_side(19, "q (quit)")
+
       @status = nil
+    end
+
+    # The first half of the screen is the file preview.
+    # This helper method assists in printing things on the
+    # other side of the screen.
+    #
+    # Always clear coloring afterwards
+    #
+    # return [void]
+    def print_on_right_side(row, message)
+      @console.cursor = [row, @mid_width + 1]
+      available_length = @console.winsize[1] - @mid_width + 1
+      print message.to_s[0, available_length]
+      print "\033[0m"
     end
 
     # Open the editor selected by options (or defined by $EDITOR) with the current
@@ -118,11 +153,11 @@ module Loupe
 
       case editor
       when "vim", "nvim"
-        spawn "#{executable} +#{@failures[@current_page].line_number} #{@failures[@current_page].file_name}"
+        spawn "#{executable} +#{@current_failure.line_number} #{@current_failure.file_name}"
       when "code"
-        spawn "#{executable} -g #{@failures[@current_page].file_name}:#{@failures[@current_page].line_number}"
+        spawn "#{executable} -g #{@current_failure.file_name}:#{@current_failure.line_number}"
       else
-        spawn "#{executable} #{@failures[@current_page].file_name}"
+        spawn "#{executable} #{@current_failure.file_name}"
       end
     end
 
@@ -146,11 +181,10 @@ module Loupe
     #
     # @return void
     def rerun_failure
-      failure = @failures[@current_page]
-      $LOADED_FEATURES.delete(failure.file_name)
-      require failure.file_name
+      $LOADED_FEATURES.delete(@current_failure.file_name)
+      require @current_failure.file_name
 
-      reporter = failure.klass.run(failure.test_name, @options)
+      reporter = @current_failure.klass.run(@current_failure.test_name, @options)
 
       if reporter.failures.empty?
         @status = "#{@color.p('Fixed', :green)}. Click f to remove from list"

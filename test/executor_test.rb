@@ -2,17 +2,18 @@
 
 require "test_helper"
 
-class ExecutorTest < Loupe::Test
+class ExecutorTest < Minitest::Test
   def setup
     Loupe::Executor.any_instance.expects(:populate_queue).returns([[MyTest, :test_example]])
   end
 
-  def test_delegates_methods_to_workers
-    MyTest.expects(:run).with(:test_example, {})
+  def test_selects_paged_reporter_when_interactive
+    executor = Loupe::Executor.new(interactive: true)
+    assert_instance_of Loupe::PagedReporter, executor.instance_variable_get(:@reporter)
+  end
 
-    executor = Loupe::Executor.new({})
-    executor.run
-
-    assert_equal 0, executor.instance_variable_get(:@queue)
+  def test_selects_plain_reporter_when_plain
+    executor = Loupe::Executor.new(interactive: false)
+    assert_instance_of Loupe::PlainReporter, executor.instance_variable_get(:@reporter)
   end
 end

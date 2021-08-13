@@ -37,5 +37,13 @@ module Loupe
     def to_s
       "#{file_name}:#{line_number} at #{@color.p(test_name, :yellow)}. #{message}"
     end
+
+    # @return [Array<String>]
+    def location_and_message
+      [
+        "#{file_name}:#{line_number} at #{@color.p(test_name, :yellow)}",
+        message
+      ]
+    end
   end
 end

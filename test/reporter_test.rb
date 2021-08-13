@@ -38,7 +38,7 @@ class ReporterTest < Minitest::Test
     assert_equal 1, reporter.instance_variable_get(:@failures).length
   end
 
-  def test_addition_operator
+  def test_concatenation_operator
     reporter = Loupe::Reporter.new
     reporter.expects(:print).with(".")
     second_reporter = Loupe::Reporter.new
