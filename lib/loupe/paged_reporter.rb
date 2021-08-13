@@ -54,6 +54,9 @@ module Loupe
       end
     end
 
+    # Print the summary at the top of the screen.
+    # This string has to be updated every time, since the statistics
+    # might change if the user has marked tests as fixed
     # return [String]
     def summary
       <<~SUMMARY
@@ -129,7 +132,7 @@ module Loupe
     # @return [String]
     def editor_executable(editor)
       ENV["PATH"].split(":").each do |p|
-        path = File.join(p.delete("}").delete("{"), editor)
+        path = File.join(p, editor)
         return path if File.exist?(path)
       end
     end
