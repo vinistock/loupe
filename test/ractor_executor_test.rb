@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+return if RUBY_VERSION < "3.0.0"
+
 require "test_helper"
 
 class RactorExecutorTest < Minitest::Test
