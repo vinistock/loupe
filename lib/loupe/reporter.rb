@@ -61,7 +61,7 @@ module Loupe
 
     # @param other [Loupe::Reporter]
     # @return [Loupe::Reporter]
-    def +(other)
+    def <<(other)
       @test_count += other.test_count
       @expectation_count += other.expectation_count
       @success_count += other.success_count

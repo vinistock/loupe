@@ -39,11 +39,11 @@ module Loupe
 
       until @queue.empty?
         idle_worker, tmp_reporter = Ractor.select(*@workers)
-        @reporter += tmp_reporter
+        @reporter << tmp_reporter
         idle_worker.send(@queue.pop)
       end
 
-      @workers.each { |w| @reporter += w.take }
+      @workers.each { |w| @reporter << w.take }
 
       @reporter.print_summary
       @reporter.exit_status

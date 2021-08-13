@@ -8,6 +8,10 @@ module Loupe
   #
   # This class is responsible for executing tests in process mode.
   class ProcessExecutor < Executor
+    # Create a new ProcessExecutor
+    #
+    # This will create a new server object that will be shared
+    # with child processes using DRb
     # @param options [Hash<Symbol, BasicObject>]
     # @return [Loupe::Executor]
     def initialize(options)
@@ -17,6 +21,10 @@ module Loupe
       @url = DRb.start_service("drbunix:", @server).uri
     end
 
+    # run
+    #
+    # Fork each one of the process workers and connect with the server
+    # object coming from DRb. Run until the queue is clear
     # @return [Integer]
     def run
       @workers = (0...[Etc.nprocessors, @server.length].min).map do
@@ -38,6 +46,8 @@ module Loupe
 
     private
 
+    # Wait until all child processes finish executing tests
+    # and then stop the DRb service
     # return [void]
     def shutdown
       @workers.each { |pid| Process.waitpid(pid) }
@@ -51,6 +61,11 @@ module Loupe
   # communicate between worker and server processes and coordinate
   # both the queue and the reporting results
   class Server
+    # The two operations we need to synchronize between the
+    # main process and its children is the queue and the reporter.
+    # We need to share the queue, so that workers can pop the tests from it
+    # and we need to share the reporter, so that workers can update the results
+    #
     # @param queue [Array<Array<Class, Symbol>>]
     # @param reporter [Loupe::Reporter]
     # @return [Loupe::Server]
@@ -59,10 +74,15 @@ module Loupe
       @reporter = reporter
     end
 
+    # add_reporter
+    #
+    # Adds a temporary reporter from a child process into
+    # the main reporter to aggregate results
+    #
     # @param other [Loupe::Reporter]
     # @return [void]
     def add_reporter(other)
-      @reporter += other
+      @reporter << other
     end
 
     # @return [Array<Class, Symbol>]

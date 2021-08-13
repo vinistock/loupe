@@ -45,7 +45,7 @@ class ReporterTest < Minitest::Test
 
     reporter.increment_success_count
     second_reporter.increment_expectation_count
-    reporter += second_reporter
+    reporter << second_reporter
 
     assert_equal 1, reporter.expectation_count
     assert_equal 1, reporter.success_count
