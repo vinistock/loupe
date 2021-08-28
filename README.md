@@ -67,6 +67,28 @@ bin/loupe --color, --no-color # enable/disable output colors
 bin/loupe --editor=EDITOR     # which editor to use for opening files when using interactive mode. The default is the environment variable $EDITOR
 ```
 
+To hook Loupe into Rake, use the provided rake task as in the example below.
+
+```ruby
+# Rakefile
+
+require "loupe/rake_task"
+
+# Instantiate the task and append any desired CLI options
+Loupe::RakeTask.new do |options|
+  options << "--plain"
+end
+
+# Optionally, set the default task to be test
+task default: :test
+```
+
+Then run
+
+```shell
+bundle exec rake test
+```
+
 ## Credits
 
 This project draws a lot of inspiration from other Ruby test frameworks, namely

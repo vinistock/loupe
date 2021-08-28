@@ -14,25 +14,26 @@ module Loupe
     TEXT
 
     # @return [void]
-    def initialize
+    def initialize(args = ARGV)
       @options = {
         color: true,
         interactive: true,
         mode: :ractor
       }
 
-      parse_options(@options)
+      parse_options(@options, args)
       @options.freeze
 
-      @files = ARGV
+      @files = args
       start
     end
 
     private
 
     # @param options [Hash<Symbol, BasicObject>]
+    # @param args [Array<String>]
     # @return [void]
-    def parse_options(options) # rubocop:disable Metrics/AbcSize
+    def parse_options(options, args) # rubocop:disable Metrics/AbcSize
       OptionParser.new do |opts|
         opts.banner = USAGE
 
@@ -54,7 +55,7 @@ module Loupe
         opts.on("--editor=EDITOR", "The editor to open test files with in interactive mode") do |value|
           options[:editor] = value
         end
-      end.parse!
+      end.parse!(args)
     end
 
     # @return [void]
