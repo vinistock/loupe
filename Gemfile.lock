@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    loupe (0.1.0)
+    loupe (0.1.1)
       drb (~> 2.0)
       io-console (~> 0.5)
 
@@ -116,4 +116,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.26
+   2.2.27
