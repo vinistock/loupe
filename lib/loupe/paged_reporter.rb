@@ -96,11 +96,9 @@ module Loupe
         @current_failure.line_number + 1,
         "#{indentation_on_failure_line(lines)}^^^ #{@current_failure.message.gsub(/(\[\d;\d{2}m|\[0m)/, '')}"
       )
-      content = lines[@current_failure.line_number - 5..@current_failure.line_number + 5].join('\n')
 
-      system("echo '#{content}' | " \
-             " bat --force-colorization --language=rb" \
-             " --paging=never --terminal-width=#{@mid_width - 1} --wrap character")
+      content = lines[@current_failure.line_number - 5..@current_failure.line_number + 5].join("\n")
+      puts content
     end
 
     # The indentation on the line where the failure happened
