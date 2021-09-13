@@ -2,5 +2,5 @@
 
 module Loupe
   # @return [String]
-  VERSION = "0.1.2"
+  VERSION = "0.1.5"
 end

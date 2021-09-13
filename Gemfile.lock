@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    loupe (0.1.2)
+    loupe (0.1.5)
       drb (~> 2.0)
       io-console (~> 0.5)
 
