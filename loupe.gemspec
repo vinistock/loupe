@@ -19,9 +19,10 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "https://github.com/vinistock/loupe/blob/master/CHANGELOG.md"
 
   spec.files = Dir["{exe,lib}/**/*",
-                   "MIT-LICENSE",
+                   "LICENSE.txt",
                    "Rakefile",
                    "README.md"]
+
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
