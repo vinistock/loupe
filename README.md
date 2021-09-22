@@ -4,7 +4,7 @@
 
 # Loupe
 
-[Loupe](https://en.wikipedia.org/wiki/Loupe) is a test framework with built in parallel execution supporting Ractor or forked process modes.
+Loupe is the toy test framework used in the talk [Parallel testing with Ractors: putting CPUs to work](https://www.youtube.com/watch?v=bvFj6_dulSo).
 
 ## Installation
 
