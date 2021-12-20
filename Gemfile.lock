@@ -8,12 +8,11 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.1.4.1)
+    activesupport (7.0.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
     ast (2.4.2)
     backport (1.2.0)
     benchmark (0.2.0)
@@ -23,7 +22,7 @@ GEM
     drb (2.1.0)
       ruby2_keywords
     e2mmap (0.1.0)
-    i18n (1.8.10)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     io-console (0.5.9)
     jaro_winkler (1.5.4)
@@ -96,7 +95,6 @@ GEM
     webrick (1.7.0)
     yard (0.9.27)
       webrick (~> 1.7.0)
-    zeitwerk (2.4.2)
 
 PLATFORMS
   arm64-darwin-20
